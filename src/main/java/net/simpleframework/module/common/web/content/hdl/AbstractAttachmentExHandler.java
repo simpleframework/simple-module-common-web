@@ -1,0 +1,163 @@
+package net.simpleframework.module.common.web.content.hdl;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import net.simpleframework.ado.bean.AbstractIdBean;
+import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.ID;
+import net.simpleframework.common.ImageUtils;
+import net.simpleframework.ctx.common.bean.AttachmentFile;
+import net.simpleframework.ctx.service.ado.db.IDbBeanService;
+import net.simpleframework.module.common.content.Attachment;
+import net.simpleframework.module.common.content.IAttachmentService;
+import net.simpleframework.module.common.web.content.page.AbstractAttachmentTooltipPage;
+import net.simpleframework.mvc.AbstractMVCPage;
+import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.PageRequestResponse;
+import net.simpleframework.mvc.common.ImageCache;
+import net.simpleframework.mvc.common.element.AbstractElement;
+import net.simpleframework.mvc.common.element.ImageElement;
+import net.simpleframework.mvc.component.ComponentParameter;
+import net.simpleframework.mvc.component.ext.attachments.AbstractAttachmentHandler;
+import net.simpleframework.mvc.component.ext.attachments.AttachmentUtils;
+import net.simpleframework.mvc.component.ext.attachments.IAttachmentHandler;
+
+/**
+ * Licensed under the Apache License, Version 2.0
+ * 
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         http://code.google.com/p/simpleframework/
+ *         http://www.simpleframework.net
+ */
+public abstract class AbstractAttachmentExHandler<T extends Attachment, M extends AbstractIdBean>
+		extends AbstractAttachmentHandler {
+
+	protected abstract IAttachmentService<T> getAttachmentService();
+
+	protected abstract IDbBeanService<M> getOwnerService();
+
+	protected String getOwnerIdParameterKey() {
+		return "ownerId";
+	}
+
+	@SuppressWarnings("unchecked")
+	protected M owner(final PageRequestResponse rRequest) {
+		final String pKey = getOwnerIdParameterKey();
+		M o = (M) rRequest.getRequestAttr(pKey);
+		if (o == null) {
+			o = getOwnerService().getBean(rRequest.getParameter(pKey));
+			if (o != null) {
+				rRequest.setRequestAttr(pKey, o);
+			}
+		}
+		return o;
+	}
+
+	@Override
+	public ID getOwnerId(final ComponentParameter cp) {
+		final M o = owner(cp);
+		return o != null ? o.getId() : null;
+	}
+
+	@Override
+	public Map<String, Object> getFormParameters(final ComponentParameter cp) {
+		final Map<String, Object> parameters = super.getFormParameters(cp);
+		final M o = owner(cp);
+		if (o != null) {
+			parameters.put(getOwnerIdParameterKey(), o.getId());
+		}
+		return parameters;
+	}
+
+	@Override
+	public AttachmentFile getAttachmentById(final ComponentParameter cp, final String id)
+			throws IOException {
+		AttachmentFile attachmentFile = getUploadCache(cp).get(id);
+		if (attachmentFile == null) {
+			final IAttachmentService<T> attachmentService = getAttachmentService();
+			final T attachment = attachmentService.getBean(id);
+			attachmentFile = attachmentService.createAttachmentFile(attachment);
+		}
+		return attachmentFile;
+	}
+
+	@Override
+	public Map<String, AttachmentFile> attachments(final ComponentParameter cp) throws IOException {
+		final Map<String, AttachmentFile> attachmentFiles = new LinkedHashMap<String, AttachmentFile>(
+				super.attachments(cp));
+		final ID ownerId = getOwnerId(cp);
+		if (ownerId != null) {
+			final IAttachmentService<T> attachmentService = getAttachmentService();
+			final IDataQuery<T> dq = attachmentService.queryByContent(ownerId);
+			T attachment;
+			while ((attachment = dq.next()) != null) {
+				final AttachmentFile attachmentFile = attachmentService
+						.createAttachmentFile(attachment);
+				if (attachmentFile == null) {
+					continue;
+				}
+				attachmentFiles.put(String.valueOf(attachment.getId()), attachmentFile);
+			}
+		}
+		return attachmentFiles;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void doSave(final ComponentParameter cp, final String id, final String topic,
+			final String description) {
+		final IAttachmentService<T> attachmentService = getAttachmentService();
+		final T t = attachmentService.getBean(id);
+		if (t != null) {
+			t.setTopic(topic);
+			t.setDescription(description);
+			attachmentService.update(t);
+		} else {
+			super.doSave(cp, id, topic, description);
+		}
+	}
+
+	@Override
+	public String getTooltipPath(final ComponentParameter cp) {
+		return AbstractMVCPage.url(AttachmentTooltipPage.class,
+				AttachmentUtils.BEAN_ID + "=" + cp.hashId());
+	}
+
+	@Override
+	public AbstractElement<?> getDownloadLink(final ComponentParameter cp,
+			final AttachmentFile attachmentFile, final String id) {
+		return null;
+	}
+
+	protected ImageElement createImageViewer(final PageParameter pp,
+			final AttachmentFile attachmentFile, final String id) {
+		final File iFile = attachmentFile.getAttachment();
+		if (ImageUtils.isImage(iFile)) {
+			try {
+				return new ImageElement().addAttribute("viewer_id", id).setSrc(
+						new ImageCache(new FileInputStream(iFile), id, 0, 0).getPath(pp));
+			} catch (final FileNotFoundException e) {
+			}
+		}
+		return null;
+	}
+
+	public static class AttachmentTooltipPage extends AbstractAttachmentTooltipPage {
+
+		@Override
+		protected AttachmentFile getAttachment(final PageParameter pp) {
+			final ComponentParameter cp = AttachmentUtils.get(pp);
+			final IAttachmentHandler aHandler = (IAttachmentHandler) cp.getComponentHandler();
+			try {
+				return aHandler.getAttachmentById(cp, pp.getParameter("id"));
+			} catch (final IOException e) {
+				return null;
+			}
+		}
+	}
+}
