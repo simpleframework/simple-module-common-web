@@ -2,6 +2,7 @@ package net.simpleframework.module.common.web.content;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import net.simpleframework.ado.query.DataQueryUtils;
@@ -10,9 +11,13 @@ import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.ObjectEx;
 import net.simpleframework.ctx.common.bean.ETimePeriod;
 import net.simpleframework.module.common.content.AbstractContentBean;
+import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.TabButton;
 import net.simpleframework.mvc.common.element.TabButtons;
+import net.simpleframework.mvc.template.struct.CategoryItem;
+import net.simpleframework.mvc.template.struct.EImageDot;
 import net.simpleframework.mvc.template.struct.ListRows;
+import net.simpleframework.mvc.template.struct.Pagelet;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -50,6 +55,13 @@ public abstract class PageletCreator<T extends AbstractContentBean> extends Obje
 			}
 		}
 		return items;
+	}
+
+	public Pagelet getHistoryPagelet(final PageParameter pp, final String cookie) {
+		final String[] arr = StringUtils.split(pp.getCookie(cookie), "|");
+		return new Pagelet(new CategoryItem($m("PageletCreator.3")), create(
+				arr == null ? null : Arrays.asList(arr), getDefaultListRowHandler()).setDotIcon(
+				EImageDot.dot2));
 	}
 
 	public TabButtons createTimePeriodTabs() {
