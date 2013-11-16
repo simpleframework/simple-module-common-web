@@ -7,9 +7,9 @@ import java.util.Iterator;
 
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.ETimePeriod;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.ObjectEx;
-import net.simpleframework.ctx.common.bean.ETimePeriod;
 import net.simpleframework.module.common.content.AbstractContentBean;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.TabButton;
