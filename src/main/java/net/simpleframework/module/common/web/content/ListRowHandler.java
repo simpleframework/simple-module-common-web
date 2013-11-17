@@ -18,7 +18,7 @@ import net.simpleframework.mvc.template.struct.ListRow;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class ListRowHandler<T extends AbstractContentBean> implements HtmlConst {
+public abstract class ListRowHandler<T extends AbstractContentBean> {
 
 	protected boolean isVisible(final T bean) {
 		return bean != null && bean.getStatus() == EContentStatus.publish;
@@ -75,7 +75,8 @@ public abstract class ListRowHandler<T extends AbstractContentBean> implements H
 		sb.append("<span style='margin-right: 6px;'>");
 		sb.append(Convert.toDateString(createDate));
 		sb.append("</span><a target='_blank' href='").append(lr.getHref())
-				.append("'>#(ListRowHandler.0)").append(NBSP).append(RAQUO).append("</a></div>");
+				.append("'>#(ListRowHandler.0)").append(HtmlConst.NBSP).append(HtmlConst.RAQUO)
+				.append("</a></div>");
 		return sb.toString();
 	}
 }
