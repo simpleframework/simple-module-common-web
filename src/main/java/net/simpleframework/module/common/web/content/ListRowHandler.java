@@ -10,6 +10,7 @@ import net.simpleframework.common.web.html.HtmlUtils;
 import net.simpleframework.ctx.service.ado.IADOBeanService;
 import net.simpleframework.module.common.content.AbstractContentBean;
 import net.simpleframework.module.common.content.EContentStatus;
+import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.template.struct.ListRow;
 
 /**
@@ -36,7 +37,7 @@ public abstract class ListRowHandler<T extends AbstractContentBean> {
 		return null;
 	}
 
-	protected abstract String getHref(T bean);
+	protected abstract String getHref(PageParameter pp, T bean);
 
 	protected abstract IADOBeanService<T> getBeanService();
 
@@ -51,8 +52,8 @@ public abstract class ListRowHandler<T extends AbstractContentBean> {
 		}
 	}
 
-	public ListRow toListRow(final T bean) {
-		final String href = getHref(bean);
+	public ListRow toListRow(final PageParameter pp, final T bean) {
+		final String href = getHref(pp, bean);
 		final ListRow lr = new ListRow(bean.getTopic()).setHref(href)
 				.setShortDesc(getShortDesc(bean));
 		if (isShowTip()) {

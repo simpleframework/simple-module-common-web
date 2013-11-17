@@ -29,19 +29,21 @@ public abstract class PageletCreator<T extends AbstractContentBean> extends Obje
 
 	protected abstract ListRowHandler<T> getDefaultListRowHandler();
 
-	public ListRows create(final IDataQuery<?> dq, final ListRowHandler<T> handler) {
-		return create(DataQueryUtils.toIterable(dq), handler);
+	public ListRows create(final PageParameter pp, final IDataQuery<?> dq,
+			final ListRowHandler<T> handler) {
+		return create(pp, DataQueryUtils.toIterable(dq), handler);
 	}
 
-	public ListRows create(final IDataQuery<?> dq) {
-		return create(DataQueryUtils.toIterable(dq));
+	public ListRows create(final PageParameter pp, final IDataQuery<?> dq) {
+		return create(pp, DataQueryUtils.toIterable(dq));
 	}
 
-	public ListRows create(final Iterable<?> it) {
-		return create(it, getDefaultListRowHandler());
+	public ListRows create(final PageParameter pp, final Iterable<?> it) {
+		return create(pp, it, getDefaultListRowHandler());
 	}
 
-	public ListRows create(final Iterable<?> it, final ListRowHandler<T> handler) {
+	public ListRows create(final PageParameter pp, final Iterable<?> it,
+			final ListRowHandler<T> handler) {
 		final ListRows items = ListRows.of();
 		if (it != null) {
 			final Iterator<?> it2 = it.iterator();
@@ -49,7 +51,7 @@ public abstract class PageletCreator<T extends AbstractContentBean> extends Obje
 			while (i++ < handler.getSize() && it2.hasNext()) {
 				final T t = handler.toBean(it2.next());
 				if (handler.isVisible(t)) {
-					items.append(handler.toListRow(t));
+					items.append(handler.toListRow(pp, t));
 				}
 			}
 		}
@@ -58,7 +60,7 @@ public abstract class PageletCreator<T extends AbstractContentBean> extends Obje
 
 	public Pagelet getHistoryPagelet(final PageParameter pp, final String cookie) {
 		final String[] arr = StringUtils.split(pp.getCookie(cookie), "|");
-		return new Pagelet(new CategoryItem($m("PageletCreator.3")), create(
+		return new Pagelet(new CategoryItem($m("PageletCreator.3")), create(pp,
 				arr == null ? null : Arrays.asList(arr), getDefaultListRowHandler()).setDotIcon(
 				EImageDot.dot2));
 	}
