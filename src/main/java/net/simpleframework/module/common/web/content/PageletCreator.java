@@ -62,7 +62,7 @@ public abstract class PageletCreator<T extends AbstractContentBean> extends Obje
 		final String[] arr = StringUtils.split(pp.getCookie(cookie), "|");
 		return new Pagelet(new CategoryItem($m("PageletCreator.3")), create(pp,
 				arr == null ? null : Arrays.asList(arr), getDefaultListRowHandler()).setDotIcon(
-				EImageDot.dot2));
+				EImageDot.imgDot2));
 	}
 
 	public TabButtons createTimePeriodTabs() {
