@@ -64,13 +64,15 @@ public abstract class ListRowHandler<T extends AbstractContentBean> {
 			} else {
 				desc = HtmlUtils.truncateHtml(bean.doc(), 240);
 			}
-			lr.setTooltip(toTipHTML(lr, desc, bean.getCreateDate()));
+			lr.setTooltip(toTipHTML(lr, bean.getTopic(), desc, bean.getCreateDate()));
 		}
 		return lr;
 	}
 
-	protected String toTipHTML(final ListRow lr, final String desc, final Date createDate) {
+	protected String toTipHTML(final ListRow lr, final String topic, final String desc,
+			final Date createDate) {
 		final StringBuilder sb = new StringBuilder();
+		sb.append("<h4 style='margin-bottom: 6px;'>").append(topic).append("</h4>");
 		sb.append(desc);
 		sb.append("<div style='text-align: right; margin-top: 4px;'>");
 		sb.append("<span style='margin-right: 6px;'>");
