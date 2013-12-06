@@ -72,14 +72,13 @@ public abstract class ListRowHandler<T extends AbstractContentBean> {
 	protected String toTipHTML(final ListRow lr, final String topic, final String desc,
 			final Date createDate) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("<h4 style='margin-bottom: 6px;'>").append(topic).append("</h4>");
-		sb.append(desc);
-		sb.append("<div style='text-align: right; margin-top: 4px;'>");
-		sb.append("<span style='margin-right: 6px;'>");
-		sb.append(Convert.toDateString(createDate));
-		sb.append("</span><a target='_blank' href='").append(lr.getHref())
-				.append("'>#(ListRowHandler.0)").append(HtmlConst.NBSP).append(HtmlConst.RAQUO)
-				.append("</a></div>");
+		sb.append("<h4>").append(topic).append("</h4>");
+		sb.append("<p>").append(desc).append("</p>");
+		sb.append("<div style='text-align: right;'>");
+		sb.append("<span style='margin-right: 6px;'>").append(Convert.toDateString(createDate))
+				.append("</span>");
+		sb.append("<a target='_blank' href='").append(lr.getHref()).append("'>#(ListRowHandler.0)")
+				.append(HtmlConst.NBSP).append(HtmlConst.RAQUO).append("</a></div>");
 		return sb.toString();
 	}
 }
