@@ -34,8 +34,8 @@ public abstract class AbstractRecommendationPage<T extends AbstractContentBean> 
 		FormTableRowTemplatePage {
 
 	@Override
-	protected void addComponents(final PageParameter pp) {
-		super.addComponents(pp);
+	protected void onForward(final PageParameter pp) {
+		super.onForward(pp);
 
 		addFormValidationBean(pp).addValidators(
 				new Validator(EValidatorMethod.number, "#r_recommendationDuration"),
