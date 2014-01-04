@@ -53,7 +53,7 @@ public abstract class AbstractRecommendationPage<T extends AbstractContentBean> 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JavascriptForward onSave(final ComponentParameter cp) {
+	public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 		final T bean = getBean(cp);
 		final int r = cp.getIntParameter("r_recommendation");
 		if (bean != null && r != bean.getRecommendation()) {
