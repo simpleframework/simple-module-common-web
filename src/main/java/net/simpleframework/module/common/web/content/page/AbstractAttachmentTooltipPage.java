@@ -2,6 +2,7 @@ package net.simpleframework.module.common.web.content.page;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.io.IOException;
 import java.util.Map;
 
 import net.simpleframework.common.Convert;
@@ -49,9 +50,13 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 	@Override
 	public Map<String, Object> createVariables(final PageParameter pp) {
 		final AttachmentFile attachment = _getAttachment(pp);
-		final KVMap kv = ((KVMap) super.createVariables(pp)).add("topic", getTopic(pp, attachment))
-				.add("size", getSize(pp, attachment)).add("date", getDate(pp, attachment))
+		final KVMap kv = ((KVMap) super.createVariables(pp)).add("date", getDate(pp, attachment))
 				.add("downloads", getDownloads(pp, attachment)).add("md5", attachment.getMd5());
+		try {
+			kv.add("topic", getTopic(pp, attachment)).add("size", getSize(pp, attachment));
+		} catch (final IOException e) {
+			log.warn(e);
+		}
 		final Object desc = getDescription(pp, attachment);
 		if (StringUtils.hasObject(desc)) {
 			kv.add("desc", desc);
@@ -64,7 +69,8 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 		return kv;
 	}
 
-	protected Object getSize(final PageParameter pp, final AttachmentFile attachment) {
+	protected Object getSize(final PageParameter pp, final AttachmentFile attachment)
+			throws IOException {
 		return FileUtils.toFileSize(attachment.getSize());
 	}
 
@@ -72,7 +78,8 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 		return Convert.toDateString(attachment.getCreateDate());
 	}
 
-	protected Object getTopic(final PageParameter pp, final AttachmentFile attachment) {
+	protected Object getTopic(final PageParameter pp, final AttachmentFile attachment)
+			throws IOException {
 		String topic = attachment.getTopic();
 		final String type = attachment.getType();
 		if (StringUtils.hasText(type)) {

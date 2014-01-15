@@ -2,7 +2,6 @@ package net.simpleframework.module.common.web.content.hdl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -129,19 +128,20 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	@Override
 	public AbstractElement<?> getDownloadLink(final ComponentParameter cp,
-			final AttachmentFile attachmentFile, final String id) {
+			final AttachmentFile attachmentFile, final String id) throws IOException {
 		return null;
 	}
 
 	protected ImageElement createImageViewer(final PageParameter pp,
 			final AttachmentFile attachmentFile, final String id) {
-		final File iFile = attachmentFile.getAttachment();
-		if (ImageUtils.isImage(iFile)) {
-			try {
+		try {
+			final File iFile = attachmentFile.getAttachment();
+			if (ImageUtils.isImage(iFile)) {
 				return new ImageElement().addAttribute("viewer_id", id).setSrc(
 						new ImageCache(new FileInputStream(iFile), id, 0, 0).getPath(pp));
-			} catch (final FileNotFoundException e) {
 			}
+		} catch (final IOException e) {
+			log.warn(e);
 		}
 		return null;
 	}

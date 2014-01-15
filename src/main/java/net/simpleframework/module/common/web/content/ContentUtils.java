@@ -1,5 +1,6 @@
 package net.simpleframework.module.common.web.content;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,6 +17,7 @@ import net.simpleframework.module.common.bean.IViewsBeanAware;
 import net.simpleframework.module.common.content.AbstractContentBean;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.AttachmentLob;
+import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.ImageCache;
@@ -79,10 +81,14 @@ public abstract class ContentUtils {
 				final String attachId = img.attr("viewer_id");
 				final Attachment attach = service.getBean(attachId);
 				final AttachmentLob lob;
-				if (attach != null && (lob = service.getLob(attach)) != null) {
-					img.addClass("viewer_img").attr("src",
-							new ImageCache(lob.getAttachment(), attachId, 0, 0).getPath(pp));
-					img.removeAttr("viewer_id");
+				try {
+					if (attach != null && (lob = service.getLob(attach)) != null) {
+						img.addClass("viewer_img").attr("src",
+								new ImageCache(lob.getAttachment(), attachId, 0, 0).getPath(pp));
+						img.removeAttr("viewer_id");
+					}
+				} catch (final IOException e) {
+					throw ContentException.of(e);
 				}
 			}
 		}
