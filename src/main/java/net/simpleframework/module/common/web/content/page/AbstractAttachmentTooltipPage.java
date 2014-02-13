@@ -78,8 +78,7 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 		return Convert.toDateString(attachment.getCreateDate());
 	}
 
-	protected Object getTopic(final PageParameter pp, final AttachmentFile attachment)
-			throws IOException {
+	protected Object getTopic(final PageParameter pp, final AttachmentFile attachment) {
 		String topic = attachment.getTopic();
 		final String type = attachment.getType();
 		if (StringUtils.hasText(type)) {
