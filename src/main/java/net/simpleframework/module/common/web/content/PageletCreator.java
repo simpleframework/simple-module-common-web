@@ -31,11 +31,11 @@ public abstract class PageletCreator<T extends AbstractContentBean> extends Obje
 
 	public ListRows create(final PageParameter pp, final IDataQuery<?> dq,
 			final ListRowHandler<T> handler) {
-		return create(pp, DataQueryUtils.toIterable(dq), handler);
+		return create(pp, DataQueryUtils.toList(dq), handler);
 	}
 
 	public ListRows create(final PageParameter pp, final IDataQuery<?> dq) {
-		return create(pp, DataQueryUtils.toIterable(dq));
+		return create(pp, DataQueryUtils.toList(dq));
 	}
 
 	public ListRows create(final PageParameter pp, final Iterable<?> it) {
