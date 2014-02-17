@@ -2,12 +2,12 @@ package net.simpleframework.module.common.web.content;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import net.simpleframework.ado.bean.IIdBeanAware;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.DateUtils;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
@@ -59,7 +59,7 @@ public abstract class ContentUtils {
 		final ArrayList<String> al = new ArrayList<String>();
 		final String[] arr = StringUtils.split(pp.getCookie(key), "|");
 		if (arr != null) {
-			al.addAll(Arrays.asList(arr));
+			al.addAll(ArrayUtils.asList(arr));
 		}
 		final String sId = Convert.toString(val);
 		al.remove(sId);

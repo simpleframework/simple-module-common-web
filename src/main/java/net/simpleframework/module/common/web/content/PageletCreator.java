@@ -2,13 +2,13 @@ package net.simpleframework.module.common.web.content;
 
 import static net.simpleframework.common.I18n.$m;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ETimePeriod;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectEx;
 import net.simpleframework.module.common.content.AbstractContentBean;
 import net.simpleframework.mvc.PageParameter;
@@ -61,7 +61,7 @@ public abstract class PageletCreator<T extends AbstractContentBean> extends Obje
 	public Pagelet getHistoryPagelet(final PageParameter pp, final String cookie) {
 		final String[] arr = StringUtils.split(pp.getCookie(cookie), "|");
 		return new Pagelet(new CategoryItem($m("PageletCreator.3")), create(pp,
-				arr == null ? null : Arrays.asList(arr)).setDotIcon(EImageDot.imgDot2));
+				arr == null ? null : ArrayUtils.asList(arr)).setDotIcon(EImageDot.imgDot2));
 	}
 
 	public TabButtons createTimePeriodTabs() {
