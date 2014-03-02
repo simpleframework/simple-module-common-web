@@ -34,6 +34,7 @@ import net.simpleframework.mvc.component.ext.userselect.UserSelectBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
+import net.simpleframework.mvc.template.TemplateUtils;
 import net.simpleframework.mvc.template.lets.OneTableTemplatePage;
 
 /**
@@ -194,7 +195,7 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final Team team = (Team) dataObject;
 			final KVMap kv = new KVMap();
-			kv.put(COL_USERID, toIconUser(cp, team.getUserId()));
+			kv.put(COL_USERID, TemplateUtils.toIconUser(cp, team.getUserId()));
 			kv.put(COL_ROLE, get(cp).getTeamService().getTeamRole(team.getRole()));
 			kv.put(TablePagerColumn.DESCRIPTION, HtmlUtils.convertHtmlLines(team.getDescription()));
 			kv.put(
