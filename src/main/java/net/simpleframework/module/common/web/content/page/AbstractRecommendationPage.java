@@ -88,7 +88,7 @@ public abstract class AbstractRecommendationPage<T extends AbstractContentBean> 
 		final InputElement r_recommendationDuration = new InputElement("r_recommendationDuration")
 				.setText(
 						NumberUtils.formatDouble((double) bean.getRecommendationDuration() / (60 * 60)))
-				.setStyle("width: 40px;");
+				.addStyle("width: 40px;");
 		final InputElement r_description = InputElement.textarea("r_description").setRows(3);
 		final InputElement r_recommendationDate = new InputElement().setText(
 				bean.getRecommendationDate()).setReadonly(true);
@@ -104,7 +104,7 @@ public abstract class AbstractRecommendationPage<T extends AbstractContentBean> 
 
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
-		return ElementList.of(new BlockElement().setStyle("color: #888;").addElements(
+		return ElementList.of(new BlockElement().addStyle("color: #888;").addElements(
 				new BlockElement().setText($m("AbstractRecommendationPage.3"))));
 	}
 }

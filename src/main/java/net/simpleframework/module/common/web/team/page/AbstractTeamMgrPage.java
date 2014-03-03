@@ -168,7 +168,7 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 			} else if (TablePagerColumn.DESCRIPTION.equals(columnName)) {
 				final String id = ObjectUtils.hashStr(elementName);
 				return new BlockElement().addElements(((InputElement) element)
-						.setInputType(EInputType.textarea).setStyle("width: 98%; min-height: 36px;")
+						.setInputType(EInputType.textarea).addStyle("width: 98%; min-height: 36px;")
 						.setRows(2).setAutoRows(true).setId(id));
 			}
 			return element;
