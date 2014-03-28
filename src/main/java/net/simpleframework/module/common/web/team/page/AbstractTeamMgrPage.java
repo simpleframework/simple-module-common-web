@@ -67,9 +67,7 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("id"));
-		if (ids != null) {
-			getTeamService().delete(ids);
-		}
+		getTeamService().delete(ids);
 		return new JavascriptForward("$Actions['AbstractTeamMgrPage_tbl']();");
 	}
 

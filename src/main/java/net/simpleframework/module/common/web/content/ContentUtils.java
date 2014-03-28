@@ -57,10 +57,7 @@ public abstract class ContentUtils {
 	public static void addViewsCookie(final PageParameter pp, final String key, final Object val,
 			final int maxQueue) {
 		final ArrayList<String> al = new ArrayList<String>();
-		final String[] arr = StringUtils.split(pp.getCookie(key), "|");
-		if (arr != null) {
-			al.addAll(ArrayUtils.asList(arr));
-		}
+		al.addAll(ArrayUtils.asList(StringUtils.split(pp.getCookie(key), "|")));
 		final String sId = Convert.toString(val);
 		al.remove(sId);
 		al.add(0, sId);
