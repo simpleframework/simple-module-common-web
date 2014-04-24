@@ -80,8 +80,7 @@ public abstract class ContentUtils {
 				final AttachmentLob lob;
 				try {
 					if (attach != null && (lob = service.getLob(attach)) != null) {
-						img.addClass("viewer_img").attr("src",
-								new ImageCache(lob.getAttachment(), attachId, 0, 0).getPath(pp));
+						img.addClass("viewer_img").attr("src", new ImageCache(lob, 0, 0).getPath(pp));
 						img.removeAttr("viewer_id");
 					}
 				} catch (final IOException e) {
