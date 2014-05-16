@@ -86,8 +86,7 @@ public abstract class AbstractRecommendationPage<T extends AbstractContentBean> 
 		final InputElement r_recommendation = InputElement.select("r_recommendation").addElements(
 				al.toArray(new Option[al.size()]));
 		final InputElement r_recommendationDuration = new InputElement("r_recommendationDuration")
-				.setText(
-						NumberUtils.formatDouble((double) bean.getRecommendationDuration() / (60 * 60)))
+				.setText(NumberUtils.format((double) bean.getRecommendationDuration() / (60 * 60)))
 				.addStyle("width: 40px;");
 		final InputElement r_description = InputElement.textarea("r_description").setRows(3);
 		final InputElement r_recommendationDate = new InputElement().setText(
