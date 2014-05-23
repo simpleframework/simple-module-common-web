@@ -21,6 +21,7 @@ import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.ImageCache;
+import net.simpleframework.mvc.component.ext.ckeditor.Toolbar;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -90,4 +91,14 @@ public abstract class ContentUtils {
 		}
 		return doc.html();
 	}
+
+	public static Toolbar HTML_TOOLBAR_BASE = Toolbar.of(new String[] { "Source" }, new String[] {
+			"Bold", "Italic", "Underline", "Strike" }, new String[] { "PasteText", "PasteFromWord" },
+			new String[] { "Find", "Replace", "-", "RemoveFormat" }, new String[] { "NumberedList",
+					"BulletedList", "-", "Outdent", "Indent", "Blockquote" }, new String[] {
+					"JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" }, new String[] {
+					"Link", "Unlink", "Anchor" }, new String[] {}, new String[] { "Styles", "Format",
+					"Font", "FontSize" }, new String[] { "TextColor", "BGColor" }, new String[] {
+					"Image", "Table", "HorizontalRule", "Smiley", "SpecialChar" },
+			new String[] { "Attach" }, new String[] { "Maximize" });
 }
