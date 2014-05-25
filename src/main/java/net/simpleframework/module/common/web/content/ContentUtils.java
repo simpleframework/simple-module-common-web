@@ -21,6 +21,7 @@ import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.ImageCache;
+import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.ckeditor.Toolbar;
 
 /**
@@ -70,17 +71,16 @@ public abstract class ContentUtils {
 	}
 
 	public static String getContent(final PageParameter pp,
-			final IAttachmentService<Attachment> service, final AbstractContentBean content) {
+			final IAttachmentService<Attachment> attachService, final AbstractContentBean content) {
 		final Document doc = content.doc();
 		final Elements eles = doc.select("img[viewer_id]");
 		if (eles != null) {
 			for (int i = 0; i < eles.size(); i++) {
 				final Element img = eles.get(i);
 				final String attachId = img.attr("viewer_id");
-				final Attachment attach = service.getBean(attachId);
-				final AttachmentLob lob;
 				try {
-					if (attach != null && (lob = service.getLob(attach)) != null) {
+					final AttachmentLob lob = attachService.getLob(attachService.getBean(attachId));
+					if (lob != null) {
 						img.addClass("viewer_img").attr("src", new ImageCache(lob, 0, 0).getPath(pp));
 						img.removeAttr("viewer_id");
 					}
@@ -90,6 +90,26 @@ public abstract class ContentUtils {
 			}
 		}
 		return doc.html();
+	}
+
+	public static String getImagePath(final ComponentParameter cp,
+			final IAttachmentService<Attachment> attachService, final Element img, final int width,
+			final int height) throws IOException {
+		ImageCache iCache = null;
+		if (img != null) {
+			final String viewerId = img.attr("viewer_id");
+			AttachmentLob lob;
+			if (StringUtils.hasText(viewerId)
+					&& (lob = attachService.getLob(attachService.getBean(viewerId))) != null) {
+				iCache = new ImageCache(lob, width, height);
+			} else {
+				iCache = new ImageCache(img.attr("src"), width, height);
+			}
+		}
+		if (iCache == null) {
+			iCache = new ImageCache();
+		}
+		return iCache.getPath(cp);
 	}
 
 	public static Toolbar HTML_TOOLBAR_BASE = Toolbar.of(new String[] { "Source" }, new String[] {
