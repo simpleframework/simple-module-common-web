@@ -93,6 +93,11 @@ public abstract class ContentUtils {
 	}
 
 	public static String getImagePath(final ComponentParameter cp,
+			final IAttachmentService<Attachment> attachService, final Element img) throws IOException {
+		return getImagePath(cp, attachService, img, 0, 0);
+	}
+
+	public static String getImagePath(final ComponentParameter cp,
 			final IAttachmentService<Attachment> attachService, final Element img, final int width,
 			final int height) throws IOException {
 		ImageCache iCache = null;
