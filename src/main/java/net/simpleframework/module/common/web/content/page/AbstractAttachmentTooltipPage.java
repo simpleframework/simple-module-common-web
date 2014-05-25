@@ -61,9 +61,9 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 		if (StringUtils.hasObject(desc)) {
 			kv.add("desc", desc);
 		}
-		final String type = attachment.getType();
+		final String ext = attachment.getExt();
 		LinkButton preview;
-		if (type != null && type.equalsIgnoreCase("pdf") && (preview = getPreviewButton(pp)) != null) {
+		if (ext.equalsIgnoreCase("pdf") && (preview = getPreviewButton(pp)) != null) {
 			kv.add("preview", preview);
 		}
 		return kv;
@@ -79,12 +79,7 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 	}
 
 	protected Object getTopic(final PageParameter pp, final AttachmentFile attachment) {
-		String topic = attachment.getTopic();
-		final String type = attachment.getType();
-		if (StringUtils.hasText(type)) {
-			topic += "." + type;
-		}
-		return topic;
+		return attachment.toFilename();
 	}
 
 	protected Object getDescription(final PageParameter pp, final AttachmentFile attachment) {
