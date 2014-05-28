@@ -79,9 +79,11 @@ public abstract class ContentUtils {
 				final Element img = eles.get(i);
 				final String attachId = img.attr("viewer_id");
 				try {
-					final AttachmentLob lob = attachService.getLob(attachService.getBean(attachId));
-					if (lob != null) {
-						img.addClass("viewer_img").attr("src", new ImageCache(lob, 0, 0).getPath(pp));
+					final Attachment attach = attachService.getBean(attachId);
+					final AttachmentLob lob;
+					if (attach != null && (lob = attachService.getLob(attach)) != null) {
+						img.addClass("viewer_img").attr("src",
+								new ImageCache(lob, attach.getFileExt(), 0, 0).getPath(pp));
 						img.removeAttr("viewer_id");
 					}
 				} catch (final IOException e) {
@@ -103,10 +105,11 @@ public abstract class ContentUtils {
 		ImageCache iCache = null;
 		if (img != null) {
 			final String viewerId = img.attr("viewer_id");
+			Attachment attach;
 			AttachmentLob lob;
 			if (StringUtils.hasText(viewerId)
-					&& (lob = attachService.getLob(attachService.getBean(viewerId))) != null) {
-				iCache = new ImageCache(lob, width, height);
+					&& (lob = attachService.getLob(attach = attachService.getBean(viewerId))) != null) {
+				iCache = new ImageCache(lob, attach.getFileExt(), width, height);
 			} else {
 				iCache = new ImageCache(img.attr("src"), width, height);
 			}
