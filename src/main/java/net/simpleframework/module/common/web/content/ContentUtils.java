@@ -83,7 +83,7 @@ public abstract class ContentUtils {
 					final AttachmentLob lob;
 					if (attach != null && (lob = attachService.getLob(attach)) != null) {
 						img.addClass("viewer_img").attr("src",
-								new ImageCache(lob, attach.getFileExt(), 0, 0).getPath(pp));
+								new ImageCache().setFiletype(attach.getFileExt()).getPath(pp, lob));
 						img.removeAttr("viewer_id");
 					}
 				} catch (final IOException e) {
@@ -102,20 +102,17 @@ public abstract class ContentUtils {
 	public static String getImagePath(final ComponentParameter cp,
 			final IAttachmentService<Attachment> attachService, final Element img, final int width,
 			final int height) throws IOException {
-		ImageCache iCache = null;
+		final ImageCache iCache = new ImageCache().setWidth(width).setHeight(height);
 		if (img != null) {
 			final String viewerId = img.attr("viewer_id");
 			Attachment attach;
 			AttachmentLob lob;
 			if (StringUtils.hasText(viewerId)
 					&& (lob = attachService.getLob(attach = attachService.getBean(viewerId))) != null) {
-				iCache = new ImageCache(lob, attach.getFileExt(), width, height);
+				return iCache.setFiletype(attach.getFileExt()).getPath(cp, lob);
 			} else {
-				iCache = new ImageCache(img.attr("src"), width, height);
+				return iCache.getPath(cp, img.attr("src"));
 			}
-		}
-		if (iCache == null) {
-			iCache = new ImageCache();
 		}
 		return iCache.getPath(cp);
 	}

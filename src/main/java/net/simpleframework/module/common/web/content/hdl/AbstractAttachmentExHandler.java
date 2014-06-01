@@ -137,7 +137,7 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			final File iFile = attachmentFile.getAttachment();
 			if (ImageUtils.isImage(iFile)) {
 				return new ImageElement().addAttribute("viewer_id", id).setSrc(
-						new ImageCache(attachmentFile, 0, 0).getPath(pp));
+						new ImageCache().getPath(pp, attachmentFile));
 			}
 		} catch (final IOException e) {
 			log.warn(e);
