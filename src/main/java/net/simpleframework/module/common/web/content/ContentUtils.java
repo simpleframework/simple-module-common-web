@@ -1,7 +1,6 @@
 package net.simpleframework.module.common.web.content;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import net.simpleframework.ado.bean.IIdBeanAware;
@@ -17,11 +16,9 @@ import net.simpleframework.lib.org.jsoup.select.Elements;
 import net.simpleframework.module.common.bean.IViewsBeanAware;
 import net.simpleframework.module.common.content.AbstractContentBean;
 import net.simpleframework.module.common.content.Attachment;
-import net.simpleframework.module.common.content.AttachmentLob;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.ImageCache;
-import net.simpleframework.mvc.common.ImageCache.ImageStream;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.ckeditor.Toolbar;
 
@@ -84,13 +81,7 @@ public abstract class ContentUtils {
 					img.addClass("viewer_img").attr(
 							"src",
 							new ImageCache().setFiletype(attach.getFileExt()).getPath(pp,
-									new ImageStream(attach.getMd5()) {
-										@Override
-										protected InputStream getInputStream() throws IOException {
-											final AttachmentLob lob = attachService.getLob(attach);
-											return lob != null ? lob.getAttachment() : null;
-										}
-									}));
+									new LobImageStream(attachService, attach)));
 					img.removeAttr("viewer_id");
 				}
 			}
@@ -113,13 +104,7 @@ public abstract class ContentUtils {
 			if (StringUtils.hasText(viewerId) && (attach = attachService.getBean(viewerId)) != null) {
 				final Attachment attach2 = attach;
 				return iCache.setFiletype(attach.getFileExt()).getPath(cp,
-						new ImageStream(attach.getMd5()) {
-							@Override
-							protected InputStream getInputStream() throws IOException {
-								final AttachmentLob lob = attachService.getLob(attach2);
-								return lob != null ? lob.getAttachment() : null;
-							}
-						});
+						new LobImageStream(attachService, attach));
 			} else {
 				return iCache.getPath(cp, img.attr("src"));
 			}
