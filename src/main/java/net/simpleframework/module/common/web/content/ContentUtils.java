@@ -102,7 +102,6 @@ public abstract class ContentUtils {
 			final String viewerId = img.attr("viewer_id");
 			Attachment attach;
 			if (StringUtils.hasText(viewerId) && (attach = attachService.getBean(viewerId)) != null) {
-				final Attachment attach2 = attach;
 				return iCache.setFiletype(attach.getFileExt()).getPath(cp,
 						new LobImageStream(attachService, attach));
 			} else {
