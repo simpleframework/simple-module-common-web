@@ -1,6 +1,7 @@
 package net.simpleframework.module.common.web.content;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import net.simpleframework.ado.bean.IIdBeanAware;
@@ -17,10 +18,10 @@ import net.simpleframework.module.common.bean.IViewsBeanAware;
 import net.simpleframework.module.common.content.AbstractContentBean;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.AttachmentLob;
-import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.ImageCache;
+import net.simpleframework.mvc.common.ImageCache.ImageStream;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.ckeditor.Toolbar;
 
@@ -78,16 +79,19 @@ public abstract class ContentUtils {
 			for (int i = 0; i < eles.size(); i++) {
 				final Element img = eles.get(i);
 				final String attachId = img.attr("viewer_id");
-				try {
-					final Attachment attach = attachService.getBean(attachId);
-					final AttachmentLob lob;
-					if (attach != null && (lob = attachService.getLob(attach)) != null) {
-						img.addClass("viewer_img").attr("src",
-								new ImageCache().setFiletype(attach.getFileExt()).getPath(pp, lob));
-						img.removeAttr("viewer_id");
-					}
-				} catch (final IOException e) {
-					throw ContentException.of(e);
+				final Attachment attach = attachService.getBean(attachId);
+				if (attach != null) {
+					img.addClass("viewer_img").attr(
+							"src",
+							new ImageCache().setFiletype(attach.getFileExt()).getPath(pp,
+									new ImageStream(attach.getMd5()) {
+										@Override
+										protected InputStream getInputStream() throws IOException {
+											final AttachmentLob lob = attachService.getLob(attach);
+											return lob != null ? lob.getAttachment() : null;
+										}
+									}));
+					img.removeAttr("viewer_id");
 				}
 			}
 		}
@@ -106,10 +110,16 @@ public abstract class ContentUtils {
 		if (img != null) {
 			final String viewerId = img.attr("viewer_id");
 			Attachment attach;
-			AttachmentLob lob;
-			if (StringUtils.hasText(viewerId)
-					&& (lob = attachService.getLob(attach = attachService.getBean(viewerId))) != null) {
-				return iCache.setFiletype(attach.getFileExt()).getPath(cp, lob);
+			if (StringUtils.hasText(viewerId) && (attach = attachService.getBean(viewerId)) != null) {
+				final Attachment attach2 = attach;
+				return iCache.setFiletype(attach.getFileExt()).getPath(cp,
+						new ImageStream(attach.getMd5()) {
+							@Override
+							protected InputStream getInputStream() throws IOException {
+								final AttachmentLob lob = attachService.getLob(attach2);
+								return lob != null ? lob.getAttachment() : null;
+							}
+						});
 			} else {
 				return iCache.getPath(cp, img.attr("src"));
 			}
