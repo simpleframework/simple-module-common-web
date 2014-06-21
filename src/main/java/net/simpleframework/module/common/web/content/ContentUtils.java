@@ -76,11 +76,11 @@ public abstract class ContentUtils {
 				final Element img = eles.get(i);
 				final String attachId = img.attr("viewer_id");
 				final Attachment attach = attachService.getBean(attachId);
-				if (attach != null) {
-					img.addClass("viewer_img").attr(
-							"src",
-							new ImageCache().setFiletype(attach.getFileExt()).getPath(pp,
-									new LobImageStream(attachService, attach)));
+				String path;
+				if (attach != null
+						&& (path = new ImageCache().setFiletype(attach.getFileExt()).getPath(pp,
+								new LobImageStream(attachService, attach))) != null) {
+					img.addClass("viewer_img").attr("src", path);
 					img.removeAttr("viewer_id");
 				}
 			}
