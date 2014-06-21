@@ -68,9 +68,8 @@ public abstract class ContentUtils {
 		pp.addCookie(key, StringUtils.join(al, "|"), (int) (DateUtils.DAY_PERIOD * 30));
 	}
 
-	public static String getContent(final PageParameter pp,
-			final IAttachmentService<Attachment> attachService, final AbstractContentBean content) {
-		final Document doc = content.doc();
+	public static void doContent(final PageParameter pp,
+			final IAttachmentService<Attachment> attachService, final Document doc) {
 		final Elements eles = doc.select("img[viewer_id]");
 		if (eles != null) {
 			for (int i = 0; i < eles.size(); i++) {
@@ -86,6 +85,12 @@ public abstract class ContentUtils {
 				}
 			}
 		}
+	}
+
+	public static String getContent(final PageParameter pp,
+			final IAttachmentService<Attachment> attachService, final AbstractContentBean content) {
+		final Document doc = content.doc();
+		doContent(pp, attachService, doc);
 		return doc.html();
 	}
 
