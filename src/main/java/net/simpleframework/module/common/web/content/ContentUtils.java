@@ -82,7 +82,6 @@ public abstract class ContentUtils {
 						&& (path = new ImageCache().setFiletype(attach.getFileExt()).getPath(pp,
 								new LobImageStream(attachService, attach))) != null) {
 					img.addClass("viewer_img").attr("src", path);
-					img.removeAttr("viewer_id");
 				}
 			}
 		}
