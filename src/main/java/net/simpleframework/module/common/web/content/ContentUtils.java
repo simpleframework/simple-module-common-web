@@ -9,6 +9,7 @@ import net.simpleframework.common.DateUtils;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
+import net.simpleframework.common.web.html.HtmlUtils;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
@@ -85,6 +86,13 @@ public abstract class ContentUtils {
 				}
 			}
 		}
+	}
+
+	public static String getContent(final PageParameter pp,
+			final IAttachmentService<Attachment> attachService, final String content) {
+		final Document doc = HtmlUtils.createHtmlDocument(content);
+		doContent(pp, attachService, doc);
+		return doc.html();
 	}
 
 	public static String getContent(final PageParameter pp,
