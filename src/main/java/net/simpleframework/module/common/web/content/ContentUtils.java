@@ -1,14 +1,17 @@
 package net.simpleframework.module.common.web.content;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import net.simpleframework.ado.bean.IIdBeanAware;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.DateUtils;
+import net.simpleframework.common.FileUtils;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectUtils;
+import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.common.web.html.HtmlUtils;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
@@ -17,10 +20,11 @@ import net.simpleframework.lib.org.jsoup.select.Elements;
 import net.simpleframework.module.common.bean.IViewsBeanAware;
 import net.simpleframework.module.common.content.AbstractContentBean;
 import net.simpleframework.module.common.content.Attachment;
+import net.simpleframework.module.common.content.AttachmentLob;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.ImageCache;
-import net.simpleframework.mvc.component.ComponentParameter;
+import net.simpleframework.mvc.common.ImageCache.ImageStream;
 import net.simpleframework.mvc.component.ext.ckeditor.Toolbar;
 
 /**
@@ -71,16 +75,12 @@ public abstract class ContentUtils {
 
 	public static void doContent(final PageParameter pp,
 			final IAttachmentService<Attachment> attachService, final Document doc) {
-		final Elements eles = doc.select("img[viewer_id]");
+		final Elements eles = doc.select("img");
 		if (eles != null) {
 			for (int i = 0; i < eles.size(); i++) {
 				final Element img = eles.get(i);
-				final String attachId = img.attr("viewer_id");
-				final Attachment attach = attachService.getBean(attachId);
-				String path;
-				if (attach != null
-						&& (path = new ImageCache().setFiletype(attach.getFileExt()).getPath(pp,
-								new LobImageStream(attachService, attach))) != null) {
+				final String path = getImagePath(pp, attachService, img);
+				if (path != null) {
 					img.addClass("viewer_img").attr("src", path);
 				}
 			}
@@ -101,26 +101,70 @@ public abstract class ContentUtils {
 		return doc.html();
 	}
 
-	public static String getImagePath(final ComponentParameter cp,
-			final IAttachmentService<Attachment> attachService, final Element img) throws IOException {
-		return getImagePath(cp, attachService, img, 0, 0);
+	public static String getImagePath(final PageParameter pp,
+			final IAttachmentService<Attachment> attachService, final Element img) {
+		return getImagePath(pp, attachService, img, 0, 0);
 	}
 
-	public static String getImagePath(final ComponentParameter cp,
+	public static String getImagePath(final PageParameter pp,
 			final IAttachmentService<Attachment> attachService, final Element img, final int width,
-			final int height) throws IOException {
+			final int height) {
+		if (img == null) {
+			return null;
+		}
 		final ImageCache iCache = new ImageCache().setWidth(width).setHeight(height);
-		if (img != null) {
-			final String viewerId = img.attr("viewer_id");
-			Attachment attach;
-			if (StringUtils.hasText(viewerId) && (attach = attachService.getBean(viewerId)) != null) {
-				return iCache.setFiletype(attach.getFileExt()).getPath(cp,
-						new LobImageStream(attachService, attach));
+		final String src = img.attr("src");
+		if (HttpUtils.isAbsoluteUrl(src)) {
+			if (width > 0 || height > 0) {
+				return iCache.getPath(pp, img.attr("src"));
 			} else {
-				return iCache.getPath(cp, img.attr("src"));
+				return src;
 			}
 		}
-		return iCache.getPath(cp);
+
+		String path = null;
+		final String attachId = img.attr("viewer_id");
+		if (StringUtils.hasText(attachId)) {
+			final Attachment attach = attachService.getBean(attachId);
+			if (attach != null) {
+				path = iCache.setFiletype(attach.getFileExt()).getPath(pp,
+						createImageStream(attachService, attach));
+			}
+		} else {
+			String filename = FileUtils.getFilename(src);
+			final int p = filename.lastIndexOf(".");
+			String ext = null;
+			if (p > 0) {
+				ext = filename.substring(p + 1);
+				filename = filename.substring(0, p);
+			}
+			if (src.startsWith("/")) {
+				path = iCache.setFiletype(ext).getPath(pp, createImageStream(attachService, filename));
+			}
+		}
+		return path;
+	}
+
+	public static ImageStream createImageStream(final IAttachmentService<Attachment> aService,
+			final String md) {
+		return new ImageStream(md) {
+			@Override
+			protected InputStream getInputStream() throws IOException {
+				final AttachmentLob lob = aService.getLob(md);
+				return lob != null ? lob.getAttachment() : null;
+			}
+		};
+	}
+
+	public static ImageStream createImageStream(final IAttachmentService<Attachment> aService,
+			final Attachment attach) {
+		return new ImageStream(attach.getMd5()) {
+			@Override
+			protected InputStream getInputStream() throws IOException {
+				final AttachmentLob lob = aService.getLob(attach);
+				return lob != null ? lob.getAttachment() : null;
+			}
+		};
 	}
 
 	public static Toolbar HTML_TOOLBAR_BASE = Toolbar.of(new String[] { "Source" }, new String[] {
