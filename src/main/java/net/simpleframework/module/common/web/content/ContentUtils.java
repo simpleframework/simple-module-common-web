@@ -113,14 +113,6 @@ public abstract class ContentUtils {
 			return null;
 		}
 		final ImageCache iCache = new ImageCache().setWidth(width).setHeight(height);
-		final String src = img.attr("src");
-		if (HttpUtils.isAbsoluteUrl(src)) {
-			if (width > 0 || height > 0) {
-				return iCache.getPath(pp, img.attr("src"));
-			} else {
-				return src;
-			}
-		}
 
 		String path = null;
 		final String attachId = img.attr("viewer_id");
@@ -131,15 +123,25 @@ public abstract class ContentUtils {
 						createImageStream(attachService, attach));
 			}
 		} else {
-			String filename = FileUtils.getFilename(src);
-			final int p = filename.lastIndexOf(".");
-			String ext = null;
-			if (p > 0) {
-				ext = filename.substring(p + 1);
-				filename = filename.substring(0, p);
-			}
-			if (src.startsWith("/")) {
-				path = iCache.setFiletype(ext).getPath(pp, createImageStream(attachService, filename));
+			final String src = img.attr("src");
+			if (HttpUtils.isAbsoluteUrl(src)) {
+				if (width > 0 || height > 0) {
+					return iCache.getPath(pp, img.attr("src"));
+				} else {
+					return src;
+				}
+			} else {
+				String filename = FileUtils.getFilename(src);
+				final int p = filename.lastIndexOf(".");
+				String ext = null;
+				if (p > 0) {
+					ext = filename.substring(p + 1);
+					filename = filename.substring(0, p);
+				}
+				if (src.startsWith("/")) {
+					path = iCache.setFiletype(ext).getPath(pp,
+							createImageStream(attachService, filename));
+				}
 			}
 		}
 		return path;
