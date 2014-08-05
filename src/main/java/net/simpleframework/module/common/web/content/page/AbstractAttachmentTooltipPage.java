@@ -55,7 +55,7 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 		try {
 			kv.add("topic", getTopic(pp, attachment)).add("size", getSize(pp, attachment));
 		} catch (final IOException e) {
-			log.warn(e);
+			getLog().warn(e);
 		}
 		final Object desc = getDescription(pp, attachment);
 		if (StringUtils.hasObject(desc)) {

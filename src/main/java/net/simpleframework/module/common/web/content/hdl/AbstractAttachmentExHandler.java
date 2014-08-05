@@ -140,7 +140,7 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 						new ImageCache().getPath(pp, attachmentFile));
 			}
 		} catch (final IOException e) {
-			log.warn(e);
+			getLog().warn(e);
 		}
 		return null;
 	}
