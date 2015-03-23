@@ -23,7 +23,6 @@ import net.simpleframework.mvc.common.element.BlockElement;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.DictInput;
 import net.simpleframework.mvc.common.element.EInputType;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.LinkButton;
@@ -74,10 +73,7 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
 		final TablePagerBean tablePager = addTablePagerBean(pp, "AbstractTeamMgrPage_tbl",
 				TeamTable.class).setEditable(true).setShowEditableBtn(false).setDblclickEdit(false);
-		tablePager
-				.addColumn(
-						new TablePagerColumn(COL_USERID, $m("AbstractTeamMgrPage.1"), 125)
-								.setTextAlign(ETextAlign.left))
+		tablePager.addColumn(new TablePagerColumn(COL_USERID, $m("AbstractTeamMgrPage.1"), 125))
 				.addColumn(new TablePagerColumn(COL_ROLE, $m("AbstractTeamMgrPage.2"), 125) {
 					@Override
 					protected Option[] getFilterOptions() {

@@ -1,5 +1,6 @@
 package net.simpleframework.module.common.web.page;
 
+import net.simpleframework.common.ID;
 import net.simpleframework.ctx.permission.PermissionDept;
 import net.simpleframework.ctx.permission.PermissionUser;
 import net.simpleframework.mvc.PageParameter;
@@ -23,7 +24,7 @@ public class AbstractMgrTPage extends Tabs_BlankPage {
 				final IPagePermissionHandler hdl = pp.getPermission();
 				final PermissionUser login = pp.getLogin();
 				if (login.isManager()) {
-					org = hdl.getDept(pp.getParameter("orgId"));
+					org = hdl.getDept(ID.of(pp.getParameter("orgId")));
 				}
 				if (org == null) {
 					org = hdl.getDept(login.getDept().getDomainId());
