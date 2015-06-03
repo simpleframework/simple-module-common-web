@@ -8,7 +8,7 @@ import java.util.Date;
 import net.simpleframework.common.NumberUtils;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.module.common.DescriptionLogUtils;
-import net.simpleframework.module.common.content.AbstractContentBean;
+import net.simpleframework.module.common.content.AbstractRecommendContentBean;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.BlockElement;
@@ -30,7 +30,7 @@ import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class AbstractRecommendationPage<T extends AbstractContentBean> extends
+public abstract class AbstractRecommendationPage<T extends AbstractRecommendContentBean> extends
 		FormTableRowTemplatePage {
 
 	@Override
