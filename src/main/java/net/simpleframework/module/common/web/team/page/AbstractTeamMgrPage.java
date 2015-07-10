@@ -53,7 +53,7 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 	}
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		addTablePagerBean(pp);

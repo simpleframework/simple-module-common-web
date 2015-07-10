@@ -34,7 +34,7 @@ public abstract class AbstractRecommendationPage<T extends AbstractRecommendCont
 		FormTableRowTemplatePage {
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		addFormValidationBean(pp).addValidators(

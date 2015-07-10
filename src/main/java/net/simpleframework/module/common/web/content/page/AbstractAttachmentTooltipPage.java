@@ -28,7 +28,7 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 	protected abstract AttachmentFile getAttachment(PageParameter pp);
 
 	@Override
-	public IForward forward(final PageParameter pp) {
+	public IForward forward(final PageParameter pp) throws Exception {
 		final AttachmentFile attachment = _getAttachment(pp);
 		if (attachment == null) {
 			return new TextForward($m("AbstractAttachmentTooltipPage.0"));
