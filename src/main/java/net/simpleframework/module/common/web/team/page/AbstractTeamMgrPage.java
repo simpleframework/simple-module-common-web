@@ -79,8 +79,7 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 					protected Option[] getFilterOptions() {
 						return Option.from(getTeamService().getTeamRoles());
 					}
-				}).addColumn(TablePagerColumn.DESCRIPTION())
-				.addColumn(TablePagerColumn.OPE().setWidth(120));
+				}).addColumn(TablePagerColumn.DESCRIPTION()).addColumn(TablePagerColumn.OPE(120));
 		return tablePager;
 	}
 
