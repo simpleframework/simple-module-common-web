@@ -7,7 +7,7 @@ import java.util.Date;
 
 import net.simpleframework.common.NumberUtils;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
-import net.simpleframework.module.common.DescriptionLogUtils;
+import net.simpleframework.module.common.LogDesc;
 import net.simpleframework.module.common.content.AbstractRecommendContentBean;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
@@ -66,7 +66,7 @@ public abstract class AbstractRecommendationPage<T extends AbstractRecommendCont
 				bean.setRecommendationDate(null);
 				bean.setRecommendationDuration(0);
 			}
-			DescriptionLogUtils.set(bean, cp.getParameter("r_description"));
+			LogDesc.set(bean, cp.getParameter("r_description"));
 			getBeanService().update(
 					new String[] { "recommendation", "recommendationDate", "recommendationDuration" },
 					bean);
