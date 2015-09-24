@@ -1,7 +1,7 @@
 package net.simpleframework.module.common.web.page;
 
 import static net.simpleframework.common.I18n.$m;
-import net.simpleframework.module.common.LogDesc;
+import net.simpleframework.module.common.log.LdescVal;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.RowField;
@@ -28,7 +28,7 @@ public abstract class AbstractDescPage extends FormTableRowTemplatePage {
 	}
 
 	protected void setLogDescription(final PageParameter pp, final Object bean) {
-		LogDesc.set(bean, pp.getParameter("sl_description"));
+		LdescVal.set(bean, pp.getParameter("sl_description"));
 	}
 
 	protected InputElement createTextarea(final PageParameter pp) {
