@@ -40,7 +40,8 @@ public class AbstractMgrTPage extends Tabs_BlankPage {
 		if (pp.isLmanager()) {
 			if (getPermissionOrg(pp).getId() != null) {
 				el.append(SpanElement.SPACE).append(
-						LinkButton.of($m("AbstractMgrTPage.2")).setOnclick("$Actions.reloc('orgId=');"));
+						LinkButton.of($m("AbstractMgrTPage.2")).setOnclick(
+								"$Actions.reloc('orgId=none');"));
 			}
 			el.append(SpanElement.SPACE).append(
 					LinkButton.of($m("AbstractMgrTPage.1")).setOnclick(
