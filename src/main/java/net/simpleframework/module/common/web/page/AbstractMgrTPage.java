@@ -34,18 +34,27 @@ public class AbstractMgrTPage extends Tabs_BlankPage {
 				.setStyle("color: #654; font-size: 11.5pt;");
 	}
 
+	protected LinkButton createOrgCancelBtn(final PageParameter pp) {
+		return LinkButton.of($m("AbstractMgrTPage.2")).setOnclick("$Actions.reloc('orgId=none');");
+	}
+
+	protected LinkButton createOrgSelectBtn(final PageParameter pp) {
+		return LinkButton.of($m("AbstractMgrTPage.1")).setOnclick(
+				"$Actions['AbstractMgrTPage_orgSelect']();");
+	}
+
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
 		final ElementList el = ElementList.of(createOrgElement(pp));
 		if (pp.isLmanager()) {
-			if (getPermissionOrg(pp).getId() != null) {
-				el.append(SpanElement.SPACE).append(
-						LinkButton.of($m("AbstractMgrTPage.2")).setOnclick(
-								"$Actions.reloc('orgId=none');"));
+			LinkButton cancelBtn;
+			if (getPermissionOrg(pp).getId() != null && (cancelBtn = createOrgCancelBtn(pp)) != null) {
+				el.append(SpanElement.SPACE).append(cancelBtn);
 			}
-			el.append(SpanElement.SPACE).append(
-					LinkButton.of($m("AbstractMgrTPage.1")).setOnclick(
-							"$Actions['AbstractMgrTPage_orgSelect']();"));
+			final LinkButton selectBtn = createOrgSelectBtn(pp);
+			if (selectBtn != null) {
+				el.append(SpanElement.SPACE).append(selectBtn);
+			}
 		}
 		return el;
 	}
