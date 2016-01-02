@@ -27,7 +27,11 @@ import net.simpleframework.mvc.template.struct.Pagelet;
  */
 public abstract class PageletCreator<T extends AbstractContentBean> extends ObjectEx {
 
-	protected abstract ListRowHandler<T> getDefaultListRowHandler();
+	protected ListRowHandler<T> lrowHandler;
+
+	protected ListRowHandler<T> getListRowHandler() {
+		return lrowHandler;
+	}
 
 	public ListRows create(final PageParameter pp, final IDataQuery<?> dq,
 			final ListRowHandler<T> handler) {
@@ -39,7 +43,7 @@ public abstract class PageletCreator<T extends AbstractContentBean> extends Obje
 	}
 
 	public ListRows create(final PageParameter pp, final Iterable<?> it) {
-		return create(pp, it, getDefaultListRowHandler());
+		return create(pp, it, getListRowHandler());
 	}
 
 	public ListRows create(final PageParameter pp, final Iterable<?> it,
