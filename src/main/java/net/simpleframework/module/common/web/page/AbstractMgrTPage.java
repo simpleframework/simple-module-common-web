@@ -30,7 +30,7 @@ public class AbstractMgrTPage extends Tabs_BlankPage {
 
 	protected SpanElement createOrgElement(final PageParameter pp) {
 		final PermissionDept org = getPermissionOrg(pp);
-		return new SpanElement(org.getId() != null ? org.getText() : $m("AbstractMgrTPage.0"))
+		return new SpanElement(org.exists() ? org.getText() : $m("AbstractMgrTPage.0"))
 				.setStyle("color: #654; font-size: 11.5pt;");
 	}
 
@@ -48,7 +48,7 @@ public class AbstractMgrTPage extends Tabs_BlankPage {
 		final ElementList el = ElementList.of(createOrgElement(pp));
 		if (pp.isLmanager()) {
 			LinkButton cancelBtn;
-			if (getPermissionOrg(pp).getId() != null && (cancelBtn = createOrgCancelBtn(pp)) != null) {
+			if (getPermissionOrg(pp).exists() && (cancelBtn = createOrgCancelBtn(pp)) != null) {
 				el.append(SpanElement.SPACE).append(cancelBtn);
 			}
 			final LinkButton selectBtn = createOrgSelectBtn(pp);
