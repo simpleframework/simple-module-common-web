@@ -43,8 +43,8 @@ public abstract class AbstractRecommendationPage<T extends AbstractRecommendCont
 	}
 
 	@Override
-	public int getLabelWidth(final PageParameter pp) {
-		return 65;
+	public String getLabelWidth(final PageParameter pp) {
+		return "65px";
 	}
 
 	protected abstract IDbBeanService<T> getBeanService();
