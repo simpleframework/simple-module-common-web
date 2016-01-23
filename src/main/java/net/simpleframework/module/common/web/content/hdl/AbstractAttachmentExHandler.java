@@ -1,6 +1,5 @@
 package net.simpleframework.module.common.web.content.hdl;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -134,8 +133,7 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 	protected ImageElement createImageViewer(final PageParameter pp,
 			final AttachmentFile attachmentFile, final String id) {
 		try {
-			final File iFile = attachmentFile.getAttachment();
-			if (ImageUtils.isImage(iFile)) {
+			if (ImageUtils.isImage(attachmentFile.getExt())) {
 				return new ImageElement().addAttribute("viewer_id", id).setSrc(
 						new ImageCache().getPath(pp, attachmentFile));
 			}
