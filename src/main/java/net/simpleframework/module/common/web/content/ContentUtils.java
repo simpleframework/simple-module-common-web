@@ -74,7 +74,7 @@ public abstract class ContentUtils {
 	}
 
 	public static void doContent(final PageParameter pp,
-			final IAttachmentService<Attachment> attachService, final Document doc) {
+			final IAttachmentService<? extends Attachment> attachService, final Document doc) {
 		final Elements eles = doc.select("img");
 		if (eles != null) {
 			for (int i = 0; i < eles.size(); i++) {
@@ -87,27 +87,27 @@ public abstract class ContentUtils {
 		}
 	}
 
-	public static String getContent(final PageParameter pp,
-			final IAttachmentService<Attachment> attachService, final String content) {
+	public static <T extends Attachment> String getContent(final PageParameter pp,
+			final IAttachmentService<T> attachService, final String content) {
 		final Document doc = HtmlUtils.createHtmlDocument(content);
 		doContent(pp, attachService, doc);
 		return doc.html();
 	}
 
-	public static String getContent(final PageParameter pp,
-			final IAttachmentService<Attachment> attachService, final AbstractContentBean content) {
+	public static <T extends Attachment> String getContent(final PageParameter pp,
+			final IAttachmentService<T> attachService, final AbstractContentBean content) {
 		final Document doc = content.doc();
 		doContent(pp, attachService, doc);
 		return doc.html();
 	}
 
 	public static String getImagePath(final PageParameter pp,
-			final IAttachmentService<Attachment> attachService, final Element img) {
+			final IAttachmentService<? extends Attachment> attachService, final Element img) {
 		return getImagePath(pp, attachService, img, 0, 0);
 	}
 
-	public static String getImagePath(final PageParameter pp,
-			final IAttachmentService<Attachment> attachService, final Element img, final int width,
+	public static <T extends Attachment> String getImagePath(final PageParameter pp,
+			final IAttachmentService<T> attachService, final Element img, final int width,
 			final int height) {
 		if (img == null) {
 			return null;
@@ -117,7 +117,7 @@ public abstract class ContentUtils {
 		String path = null;
 		final String attachId = img.attr("viewer_id");
 		if (StringUtils.hasText(attachId)) {
-			final Attachment attach = attachService.getBean(attachId);
+			final T attach = attachService.getBean(attachId);
 			if (attach != null) {
 				path = iCache.setFiletype(attach.getFileExt()).getPath(pp,
 						createImageStream(attachService, attach));
@@ -147,8 +147,8 @@ public abstract class ContentUtils {
 		return path;
 	}
 
-	public static ImageStream createImageStream(final IAttachmentService<Attachment> aService,
-			final String md) {
+	public static <T extends Attachment> ImageStream createImageStream(
+			final IAttachmentService<T> aService, final String md) {
 		return new ImageStream(md) {
 			@Override
 			protected InputStream getInputStream() throws IOException {
@@ -158,8 +158,8 @@ public abstract class ContentUtils {
 		};
 	}
 
-	public static ImageStream createImageStream(final IAttachmentService<Attachment> aService,
-			final Attachment attach) {
+	public static <T extends Attachment> ImageStream createImageStream(
+			final IAttachmentService<T> aService, final T attach) {
 		return new ImageStream(attach.getMd5()) {
 			@Override
 			protected InputStream getInputStream() throws IOException {
