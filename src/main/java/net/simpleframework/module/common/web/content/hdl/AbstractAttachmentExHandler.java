@@ -1,7 +1,10 @@
 package net.simpleframework.module.common.web.content.hdl;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.simpleframework.ado.bean.AbstractIdBean;
@@ -101,6 +104,21 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			}
 		}
 		return attachmentFiles;
+	}
+
+	@Override
+	public void doExchange(final ComponentParameter cp, final String... ids) {
+		final List<T> list = new ArrayList<T>();
+		final IAttachmentService<T> attachService = getAttachmentService();
+		for (final String id : ids) {
+			final T t = attachService.getBean(id);
+			if (t != null) {
+				list.add(t);
+			}
+		}
+		@SuppressWarnings("unchecked")
+		final T[] arr = (T[]) Array.newInstance(attachService.getBeanClass(), list.size());
+		attachService.exchange(list.toArray(arr));
 	}
 
 	@SuppressWarnings("unchecked")
