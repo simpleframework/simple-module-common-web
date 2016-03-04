@@ -18,6 +18,4 @@ public interface IContentRefAware {
 	IModuleRef getFavoriteRef();
 
 	IModuleRef getLogRef();
-
-	IModuleRef getPDFRef();
 }

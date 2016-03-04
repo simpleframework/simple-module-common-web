@@ -3,13 +3,18 @@ package net.simpleframework.module.common.web.content.page;
 import static net.simpleframework.common.I18n.$m;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Map;
 
+import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.FileUtils;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.html.HtmlUtils;
+import net.simpleframework.ctx.ApplicationContextFactory;
+import net.simpleframework.ctx.IApplicationContext;
+import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.PageParameter;
@@ -91,6 +96,24 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 	}
 
 	protected LinkButton getPreviewButton(final PageParameter pp) {
+		final Object context = ApplicationContextFactory.ctx();
+		IModuleRef ref;
+		if (!(context instanceof IApplicationContext)
+				|| (ref = ((IApplicationContext) context).getPDFRef()) == null) {
+			return null;
+		}
+		final AttachmentFile attachment = _getAttachment(pp);
+		if (attachment == null) {
+			return null;
+		}
+		try {
+			final Method method = ref.getClass().getMethod("getPreviewUrl", PageParameter.class,
+					AttachmentFile.class);
+			return createPreviewButton(pp).setHref(
+					(String) ClassUtils.invoke(method, ref, pp, attachment));
+		} catch (final Exception e) {
+			getLog().error(e);
+		}
 		return null;
 	}
 
