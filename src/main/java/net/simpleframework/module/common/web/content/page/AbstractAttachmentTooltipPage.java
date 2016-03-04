@@ -42,14 +42,12 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 	}
 
 	protected AttachmentFile _getAttachment(final PageParameter pp) {
-		AttachmentFile attachment = (AttachmentFile) pp.getRequestAttr("@attachment");
-		if (attachment == null) {
-			attachment = getAttachment(pp);
-		}
-		if (attachment != null) {
-			pp.setRequestAttr("@attachment", attachment);
-		}
-		return attachment;
+		return pp.getRequestCache("@attachment", new CacheV<AttachmentFile>() {
+			@Override
+			public AttachmentFile get() {
+				return getAttachment(pp);
+			}
+		});
 	}
 
 	@Override
@@ -102,6 +100,7 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 				|| (ref = ((IApplicationContext) context).getPDFRef()) == null) {
 			return null;
 		}
+
 		final AttachmentFile attachment = _getAttachment(pp);
 		if (attachment == null) {
 			return null;
