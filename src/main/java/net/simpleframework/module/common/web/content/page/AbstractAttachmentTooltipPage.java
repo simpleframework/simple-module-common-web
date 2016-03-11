@@ -16,6 +16,7 @@ import net.simpleframework.ctx.ApplicationContextFactory;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
+import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.TextForward;
@@ -39,6 +40,11 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 			return new TextForward($m("AbstractAttachmentTooltipPage.0"));
 		}
 		return super.forward(pp);
+	}
+
+	@Override
+	public String getPageRole(final PageParameter pp) {
+		return PermissionConst.ROLE_ANONYMOUS;
 	}
 
 	protected AttachmentFile _getAttachment(final PageParameter pp) {
