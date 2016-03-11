@@ -10,6 +10,8 @@ import net.simpleframework.common.DateUtils;
 import net.simpleframework.common.FileUtils;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
+import net.simpleframework.common.logger.Log;
+import net.simpleframework.common.logger.LogFactory;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.common.web.html.HtmlUtils;
@@ -34,7 +36,6 @@ import net.simpleframework.mvc.component.ext.ckeditor.Toolbar;
  *         http://www.simpleframework.net
  */
 public abstract class ContentUtils {
-
 	// updateViews
 
 	@SuppressWarnings("unchecked")
@@ -119,8 +120,12 @@ public abstract class ContentUtils {
 		if (StringUtils.hasText(attachId)) {
 			final T attach = attachService.getBean(attachId);
 			if (attach != null) {
-				path = iCache.setFiletype(attach.getFileExt()).getPath(pp,
-						createImageStream(attachService, attach));
+				try {
+					path = iCache.setFiletype(attach.getFileExt()).getPath(pp,
+							attachService.createAttachmentFile(attach));
+				} catch (final IOException e) {
+					log.warn(e);
+				}
 			}
 		} else {
 			final String src = img.attr("src");
@@ -169,6 +174,7 @@ public abstract class ContentUtils {
 		};
 	}
 
+	static Log log = LogFactory.getLogger(ContentUtils.class);
 	public static Toolbar HTML_TOOLBAR_BASE = Toolbar.of(new String[] { "Source" }, new String[] {
 			"Bold", "Italic", "Underline", "Strike" }, new String[] { "PasteText", "PasteFromWord" },
 			new String[] { "Find", "Replace", "-", "RemoveFormat" }, new String[] { "NumberedList",
