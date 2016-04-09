@@ -93,7 +93,9 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		final ID ownerId = getOwnerId(cp);
 		if (ownerId != null) {
 			final IAttachmentService<T> attachmentService = getAttachmentService();
-			final IDataQuery<T> dq = attachmentService.queryByContent(ownerId);
+			final int attachtype = getAttachtype(cp);
+			final IDataQuery<T> dq = attachtype > -1 ? attachmentService.queryByContent(ownerId,
+					attachtype) : attachmentService.queryByContent(ownerId);
 			T attachment;
 			while ((attachment = dq.next()) != null) {
 				final AttachmentFile attachmentFile = attachmentService
