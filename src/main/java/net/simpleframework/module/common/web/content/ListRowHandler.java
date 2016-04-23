@@ -75,7 +75,7 @@ public abstract class ListRowHandler<T extends AbstractContentBean> {
 		sb.append("<h4>").append(topic).append("</h4>");
 		sb.append("<p>").append(desc).append("</p>");
 		sb.append("<div style='text-align: right;'>");
-		sb.append("<span style='margin-right: 6px;'>").append(Convert.toDateString(createDate))
+		sb.append("<span style='margin-right: 6px;'>").append(Convert.toDateTimeString(createDate))
 				.append("</span>");
 		sb.append("<a target='_blank' href='").append(lr.getHref()).append("'>#(ListRowHandler.0)")
 				.append(HtmlConst.NBSP).append(HtmlConst.RAQUO).append("</a></div>");
