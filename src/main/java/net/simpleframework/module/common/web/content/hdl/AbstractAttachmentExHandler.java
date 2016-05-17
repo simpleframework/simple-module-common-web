@@ -127,15 +127,16 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 	@SuppressWarnings("unchecked")
 	@Override
 	public void doSave(final ComponentParameter cp, final String id, final String topic,
-			final String description) throws Exception {
+			final int attachtype, final String description) throws Exception {
 		final IAttachmentService<T> attachmentService = getAttachmentService();
 		final T t = attachmentService.getBean(id);
 		if (t != null) {
 			t.setTopic(topic);
+			t.setAttachtype(attachtype);
 			t.setDescription(description);
 			attachmentService.update(t);
 		} else {
-			super.doSave(cp, id, topic, description);
+			super.doSave(cp, id, topic, attachtype, description);
 		}
 	}
 
