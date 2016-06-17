@@ -9,7 +9,7 @@ import net.simpleframework.common.web.html.HtmlConst;
 import net.simpleframework.common.web.html.HtmlUtils;
 import net.simpleframework.ctx.service.ado.IADOBeanService;
 import net.simpleframework.module.common.content.AbstractContentBean;
-import net.simpleframework.module.common.content.EContentStatus;
+import net.simpleframework.module.common.content.AbstractContentBean.EContentStatus;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.template.struct.ListRow;
 
