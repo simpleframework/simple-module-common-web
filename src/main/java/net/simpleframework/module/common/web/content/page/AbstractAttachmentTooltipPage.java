@@ -123,6 +123,6 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 	}
 
 	protected LinkButton createPreviewButton(final PageParameter pp) {
-		return LinkButton.corner($m("AbstractAttachmentTooltipPage.7")).setTarget("_blank");
+		return LinkButton.corner($m("AbstractAttachmentTooltipPage.7")).blank();
 	}
 }
