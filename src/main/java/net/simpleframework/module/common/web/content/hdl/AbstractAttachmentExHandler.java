@@ -59,6 +59,12 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 	}
 
 	@Override
+	protected String getCachekey(final ComponentParameter cp) {
+		final M m = owner(cp);
+		return m != null ? String.valueOf(m.getId()) : super.getCachekey(cp);
+	}
+
+	@Override
 	public ID getOwnerId(final ComponentParameter cp) {
 		final M o = owner(cp);
 		return o != null ? o.getId() : null;
