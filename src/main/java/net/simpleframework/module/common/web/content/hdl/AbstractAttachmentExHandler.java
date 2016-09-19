@@ -60,8 +60,12 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	@Override
 	protected String getCachekey(final ComponentParameter cp) {
+		String key = super.getCachekey(cp);
 		final M m = owner(cp);
-		return m != null ? String.valueOf(m.getId()) : super.getCachekey(cp);
+		if (m != null) {
+			key += "_" + String.valueOf(m.getId());
+		}
+		return key;
 	}
 
 	@Override
