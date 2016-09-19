@@ -14,8 +14,8 @@ import net.simpleframework.mvc.component.ext.comments.ctx.CommentCtxHandler;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class AbstractCommentCtxHandler<T extends AbstractComment> extends
-		CommentCtxHandler<T> {
+public abstract class AbstractCommentCtxHandler<T extends AbstractComment>
+		extends CommentCtxHandler<T> {
 
 	@Override
 	protected abstract ICommentService<T> getBeanService();

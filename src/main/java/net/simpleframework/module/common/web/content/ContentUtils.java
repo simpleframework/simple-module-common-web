@@ -44,9 +44,8 @@ public abstract class ContentUtils {
 		if (bean == null) {
 			return;
 		}
-		final String key = "views_"
-				+ (bean instanceof IIdBeanAware ? ((IIdBeanAware) bean).getId() : ObjectUtils
-						.hashStr(bean));
+		final String key = "views_" + (bean instanceof IIdBeanAware ? ((IIdBeanAware) bean).getId()
+				: ObjectUtils.hashStr(bean));
 		if (pp.getSessionAttr(key) == null) {
 			synchronized (bean) { // 写数据时，阻塞页面读
 				bean.setViews(bean.getViews() + 1);
@@ -175,13 +174,15 @@ public abstract class ContentUtils {
 	}
 
 	static Log log = LogFactory.getLogger(ContentUtils.class);
-	public static Toolbar HTML_TOOLBAR_BASE = Toolbar.of(new String[] { "Source" }, new String[] {
-			"Bold", "Italic", "Underline", "Strike" }, new String[] { "PasteText", "PasteFromWord" },
-			new String[] { "Find", "Replace", "-", "RemoveFormat" }, new String[] { "NumberedList",
-					"BulletedList", "-", "Outdent", "Indent", "Blockquote" }, new String[] {
-					"JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" }, new String[] {
-					"Link", "Unlink", "Anchor" }, new String[] {}, new String[] { "Styles", "Format",
-					"Font", "FontSize" }, new String[] { "TextColor", "BGColor" }, new String[] {
-					"Image", "Table", "HorizontalRule", "Smiley", "SpecialChar" },
+	public static Toolbar HTML_TOOLBAR_BASE = Toolbar.of(new String[] { "Source" },
+			new String[] { "Bold", "Italic", "Underline", "Strike" },
+			new String[] { "PasteText", "PasteFromWord" },
+			new String[] { "Find", "Replace", "-", "RemoveFormat" },
+			new String[] { "NumberedList", "BulletedList", "-", "Outdent", "Indent", "Blockquote" },
+			new String[] { "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" },
+			new String[] { "Link", "Unlink", "Anchor" }, new String[] {},
+			new String[] { "Styles", "Format", "Font", "FontSize" },
+			new String[] { "TextColor", "BGColor" },
+			new String[] { "Image", "Table", "HorizontalRule", "Smiley", "SpecialChar" },
 			new String[] { "Attach" }, new String[] { "Maximize" });
 }

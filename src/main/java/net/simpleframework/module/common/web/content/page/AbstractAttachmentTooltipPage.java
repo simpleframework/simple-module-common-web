@@ -114,8 +114,8 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 		try {
 			final Method method = ref.getClass().getMethod("getPreviewUrl", PageParameter.class,
 					AttachmentFile.class);
-			return createPreviewButton(pp).setHref(
-					(String) ClassUtils.invoke(method, ref, pp, attachment));
+			return createPreviewButton(pp)
+					.setHref((String) ClassUtils.invoke(method, ref, pp, attachment));
 		} catch (final Exception e) {
 			getLog().error(e);
 		}

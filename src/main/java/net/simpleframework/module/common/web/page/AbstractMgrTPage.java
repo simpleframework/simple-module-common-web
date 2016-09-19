@@ -1,6 +1,7 @@
 package net.simpleframework.module.common.web.page;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.ctx.permission.PermissionDept;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
@@ -40,8 +41,8 @@ public class AbstractMgrTPage extends Tabs_BlankPage {
 	}
 
 	protected LinkButton createOrgSelectBtn(final PageParameter pp) {
-		return LinkButton.of($m("AbstractMgrTPage.1")).setOnclick(
-				"$Actions['AbstractMgrTPage_orgSelect']();");
+		return LinkButton.of($m("AbstractMgrTPage.1"))
+				.setOnclick("$Actions['AbstractMgrTPage_orgSelect']();");
 	}
 
 	@Override

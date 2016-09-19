@@ -1,6 +1,7 @@
 package net.simpleframework.module.common.web.page;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.module.common.log.LdescVal;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.InputElement;
@@ -24,8 +25,8 @@ public abstract class AbstractDescPage extends FormTableRowTemplatePage {
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
-		addFormValidationBean(pp).addValidators(
-				new Validator(EValidatorMethod.required, "#sl_description"));
+		addFormValidationBean(pp)
+				.addValidators(new Validator(EValidatorMethod.required, "#sl_description"));
 	}
 
 	protected void setLogDescription(final PageParameter pp, final Object bean) {

@@ -128,8 +128,7 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 		return ElementList.of(
 				new LinkButton($m("AbstractTeamMgrPage.0"))
 						.setOnclick("$Actions['AbstractTeamMgrPage_tbl'].add_row();"),
-				SpanElement.SPACE,
-				LinkButton.deleteBtn().setOnclick(
+				SpanElement.SPACE, LinkButton.deleteBtn().setOnclick(
 						"$Actions['AbstractTeamMgrPage_tbl'].doAct('AbstractTeamMgrPage_delete');"));
 	}
 
@@ -149,9 +148,9 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 			if (COL_USERID.equals(columnName)) {
 				final InputElement hidden = InputElement.hidden().setName(elementName)
 						.setId(ObjectUtils.hashStr(elementName));
-				final DictInput tb = (DictInput) new DictInput(ObjectUtils.hashStr(elementName
-						+ "-text")).setDictComponent("AbstractTeamMgrPage_userselect").setHiddenField(
-						hidden);
+				final DictInput tb = (DictInput) new DictInput(
+						ObjectUtils.hashStr(elementName + "-text"))
+								.setDictComponent("AbstractTeamMgrPage_userselect").setHiddenField(hidden);
 				Object val;
 				if (rowData != null && ((val = BeanUtils.getProperty(rowData, columnName)) != null)) {
 					hidden.setText(column.objectToString(val));
@@ -185,18 +184,17 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 		}
 
 		@Override
-		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
+		protected Map<String, Object> getRowData(final ComponentParameter cp,
+				final Object dataObject) {
 			final Team team = (Team) dataObject;
 			final KVMap kv = new KVMap();
 			kv.put(COL_USERID, TemplateUtils.toIconUser(cp, team.getUserId()));
 			kv.put(COL_ROLE, get(cp).getTeamService().getTeamRole(team.getRole()));
 			kv.put(TablePagerColumn.DESCRIPTION, HtmlUtils.convertHtmlLines(team.getDescription()));
-			kv.put(
-					TablePagerColumn.OPE,
-					ButtonElement.editBtn().setOnclick(
-							"$Actions['AbstractTeamMgrPage_tbl'].edit_row(this);")
-							+ SpanElement.SPACE.toString()
-							+ ButtonElement.deleteBtn().setOnclick(
+			kv.put(TablePagerColumn.OPE,
+					ButtonElement.editBtn()
+							.setOnclick("$Actions['AbstractTeamMgrPage_tbl'].edit_row(this);")
+							+ SpanElement.SPACE.toString() + ButtonElement.deleteBtn().setOnclick(
 									"$Actions['AbstractTeamMgrPage_delete']('id=" + team.getId() + "');"));
 			return kv;
 		}

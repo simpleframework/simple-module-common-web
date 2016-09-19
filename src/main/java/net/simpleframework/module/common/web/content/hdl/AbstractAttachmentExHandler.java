@@ -60,8 +60,12 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	@Override
 	protected String getCachekey(final ComponentParameter cp) {
+		String key = super.getCachekey(cp);
 		final M m = owner(cp);
-		return m != null ? String.valueOf(m.getId()) : super.getCachekey(cp);
+		if (m != null) {
+			key += "_" + String.valueOf(m.getId());
+		}
+		return key;
 	}
 
 	@Override
@@ -100,8 +104,9 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		if (ownerId != null) {
 			final IAttachmentService<T> attachmentService = getAttachmentService();
 			final int attachtype = getAttachtype(cp);
-			final IDataQuery<T> dq = attachtype > -1 ? attachmentService.queryByContent(ownerId,
-					attachtype) : attachmentService.queryByContent(ownerId);
+			final IDataQuery<T> dq = attachtype > -1
+					? attachmentService.queryByContent(ownerId, attachtype)
+					: attachmentService.queryByContent(ownerId);
 			T attachment;
 			while ((attachment = dq.next()) != null) {
 				final AttachmentFile attachmentFile = attachmentService
@@ -162,8 +167,8 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			final AttachmentFile attachmentFile, final String id) {
 		try {
 			if (ImageUtils.isImage(attachmentFile.getExt())) {
-				return new ImageElement().addAttribute("viewer_id", id).setSrc(
-						new ImageCache().getPath(pp, attachmentFile));
+				return new ImageElement().addAttribute("viewer_id", id)
+						.setSrc(new ImageCache().getPath(pp, attachmentFile));
 			}
 		} catch (final IOException e) {
 			getLog().warn(e);
