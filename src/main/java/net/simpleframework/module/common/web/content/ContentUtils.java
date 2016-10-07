@@ -75,6 +75,9 @@ public abstract class ContentUtils {
 
 	public static void doContent(final PageParameter pp,
 			final IAttachmentService<? extends Attachment> attachService, final Document doc) {
+		if (doc == null) {
+			return;
+		}
 		final Elements eles = doc.select("img");
 		if (eles != null) {
 			for (int i = 0; i < eles.size(); i++) {
@@ -91,7 +94,7 @@ public abstract class ContentUtils {
 			final IAttachmentService<T> attachService, final String content) {
 		final Document doc = HtmlUtils.createHtmlDocument(content);
 		doContent(pp, attachService, doc);
-		return doc.html();
+		return doc != null ? doc.html() : null;
 	}
 
 	public static <T extends Attachment> String getContent(final PageParameter pp,
