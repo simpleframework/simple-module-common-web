@@ -75,6 +75,8 @@ public abstract class AbstractTeamMgrPage<T extends Team> extends OneTableTempla
 				TeamTable.class).setEditable(true).setShowEditableBtn(false).setDblclickEdit(false);
 		tablePager.addColumn(new TablePagerColumn(COL_USERID, $m("AbstractTeamMgrPage.1"), 125))
 				.addColumn(new TablePagerColumn(COL_ROLE, $m("AbstractTeamMgrPage.2"), 125) {
+					private static final long serialVersionUID = 7700856489924676588L;
+
 					@Override
 					protected Option[] getFilterOptions() {
 						return Option.from(getTeamService().getTeamRoles());
