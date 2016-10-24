@@ -143,7 +143,9 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		final T t = attachmentService.getBean(id);
 		if (t != null) {
 			t.setTopic(topic);
-			t.setAttachtype(attachtype);
+			if (attachtype > 0) {
+				t.setAttachtype(attachtype);
+			}
 			t.setDescription(description);
 			attachmentService.update(t);
 		} else {
