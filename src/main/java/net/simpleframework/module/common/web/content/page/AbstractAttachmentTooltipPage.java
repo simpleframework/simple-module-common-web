@@ -10,7 +10,6 @@ import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.FileUtils;
 import net.simpleframework.common.StringUtils;
-import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.html.HtmlUtils;
 import net.simpleframework.ctx.ApplicationContextFactory;
 import net.simpleframework.ctx.IApplicationContext;
@@ -26,7 +25,8 @@ import net.simpleframework.mvc.template.AbstractTemplatePage;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage {
@@ -54,28 +54,6 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 				return getAttachment(pp);
 			}
 		});
-	}
-
-	@Override
-	public Map<String, Object> createVariables(final PageParameter pp) {
-		final AttachmentFile attachment = _getAttachment(pp);
-		final KVMap kv = ((KVMap) super.createVariables(pp)).add("date", getDate(pp, attachment))
-				.add("downloads", getDownloads(pp, attachment)).add("md5", attachment.getMd5());
-		try {
-			kv.add("topic", getTopic(pp, attachment)).add("size", getSize(pp, attachment));
-		} catch (final IOException e) {
-			getLog().warn(e);
-		}
-		final Object desc = getDescription(pp, attachment);
-		if (StringUtils.hasObject(desc)) {
-			kv.add("desc", desc);
-		}
-		final String ext = attachment.getExt();
-		LinkButton preview;
-		if (ext.equalsIgnoreCase("pdf") && (preview = getPreviewButton(pp)) != null) {
-			kv.add("preview", preview);
-		}
-		return kv;
 	}
 
 	protected Object getSize(final PageParameter pp, final AttachmentFile attachment)
@@ -124,5 +102,39 @@ public abstract class AbstractAttachmentTooltipPage extends AbstractTemplatePage
 
 	protected LinkButton createPreviewButton(final PageParameter pp) {
 		return LinkButton.corner($m("AbstractAttachmentTooltipPage.7")).blank();
+	}
+
+	protected String toTrRow(final String lbl, final Object val) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("<tr>");
+		sb.append(" <td class='l'>").append(lbl).append("</td>");
+		sb.append(" <td class='wrap_text'>").append(val).append("</td>");
+		sb.append("</tr>");
+		return sb.toString();
+	}
+
+	@Override
+	protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
+			final String currentVariable) throws IOException {
+		final AttachmentFile attachment = _getAttachment(pp);
+		final StringBuilder sb = new StringBuilder();
+		sb.append("<div class='AbstractAttachmentTooltipPage'><table>");
+		sb.append(toTrRow($m("AbstractAttachmentTooltipPage.1"), getTopic(pp, attachment)));
+		sb.append(toTrRow($m("AbstractAttachmentTooltipPage.6"), attachment.getMd5()));
+		sb.append(toTrRow($m("AbstractAttachmentTooltipPage.3"), getSize(pp, attachment)));
+		sb.append(toTrRow($m("AbstractAttachmentTooltipPage.5"), getDownloads(pp, attachment)));
+		sb.append(toTrRow($m("AbstractAttachmentTooltipPage.4"), getDate(pp, attachment)));
+		final Object desc = getDescription(pp, attachment);
+		if (StringUtils.hasObject(desc)) {
+			sb.append(toTrRow($m("AbstractAttachmentTooltipPage.2"), desc));
+		}
+		sb.append("</table>");
+		final String ext = attachment.getExt();
+		LinkButton preview;
+		if (ext.equalsIgnoreCase("pdf") && (preview = getPreviewButton(pp)) != null) {
+			sb.append("<div class='b'>").append(preview).append("</div>");
+		}
+		sb.append("</div>");
+		return sb.toString();
 	}
 }
