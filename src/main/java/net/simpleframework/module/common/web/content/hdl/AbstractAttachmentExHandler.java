@@ -46,7 +46,7 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 	}
 
 	@SuppressWarnings("unchecked")
-	protected M owner(final PageRequestResponse rRequest) {
+	public M owner(final PageRequestResponse rRequest) {
 		final String pKey = getOwnerIdParameterKey();
 		M o = (M) rRequest.getRequestAttr(pKey);
 		if (o == null) {
