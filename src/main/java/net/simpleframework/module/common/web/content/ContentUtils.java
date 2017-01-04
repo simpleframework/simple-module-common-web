@@ -101,7 +101,7 @@ public abstract class ContentUtils {
 			final IAttachmentService<T> attachService, final AbstractContentBean content) {
 		final Document doc = content.doc();
 		doContent(pp, attachService, doc);
-		return doc.html();
+		return doc == null ? "" : doc.html();
 	}
 
 	public static String getImagePath(final PageParameter pp,
