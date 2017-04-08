@@ -160,7 +160,7 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 	}
 
 	@Override
-	public AbstractElement<?> getDownloadLink(final ComponentParameter cp,
+	public AbstractElement<?> getDownloadLinkElement(final ComponentParameter cp,
 			final AttachmentFile attachmentFile, final String id) throws IOException {
 		return null;
 	}
