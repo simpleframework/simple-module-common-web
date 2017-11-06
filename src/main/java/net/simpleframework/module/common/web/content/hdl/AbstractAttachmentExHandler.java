@@ -98,7 +98,7 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	@Override
 	public Map<String, AttachmentFile> attachments(final ComponentParameter cp) throws IOException {
-		final Map<String, AttachmentFile> attachmentFiles = new LinkedHashMap<String, AttachmentFile>(
+		final Map<String, AttachmentFile> attachmentFiles = new LinkedHashMap<>(
 				super.attachments(cp));
 		final ID ownerId = getOwnerId(cp);
 		if (ownerId != null) {
@@ -122,7 +122,7 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	@Override
 	public void doExchange(final ComponentParameter cp, final String... ids) {
-		final List<T> list = new ArrayList<T>();
+		final List<T> list = new ArrayList<>();
 		final IAttachmentService<T> attachService = getAttachmentService();
 		for (final String id : ids) {
 			final T t = attachService.getBean(id);
