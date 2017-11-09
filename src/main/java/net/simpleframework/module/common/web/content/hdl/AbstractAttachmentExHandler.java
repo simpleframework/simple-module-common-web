@@ -1,19 +1,22 @@
 package net.simpleframework.module.common.web.content.hdl;
 
+import static net.simpleframework.common.I18n.$m;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.simpleframework.ado.ColumnData;
-import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.bean.AbstractIdBean;
-import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.Convert;
+import net.simpleframework.common.FileUtils;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.ImageUtils;
+import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
@@ -25,11 +28,13 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.PageRequestResponse;
 import net.simpleframework.mvc.common.ImageCache;
 import net.simpleframework.mvc.common.element.AbstractElement;
+import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.attachments.AbstractAttachmentHandler;
 import net.simpleframework.mvc.component.ext.attachments.AttachmentUtils;
 import net.simpleframework.mvc.component.ext.attachments.IAttachmentHandler;
+import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -165,12 +170,13 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	@Override
 	public IDataQuery<?> queryAttachmentHistory(final ComponentParameter cp) {
-		final ID loginId = cp.getLoginId();
-		if (loginId == null) {
-			return DataQueryUtils.nullQuery();
+		String[] arr = null;
+		final String types = cp.getParameter("types");
+		if (StringUtils.hasText(types)) {
+			cp.addFormParameter("types", types);
+			arr = StringUtils.split(types, ";");
 		}
-		return getAttachmentService().queryByParams(FilterItems.of("userid", loginId),
-				ColumnData.DESC("createdate"));
+		return getAttachmentService().queryByUser(cp.getLoginId(), true, arr);
 	}
 
 	@Override
@@ -178,8 +184,36 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			final Object dataObject) {
 		final Attachment attach = (Attachment) dataObject;
 		final KVMap row = new KVMap();
-		row.add("topic", attach.getTopic());
+		final StringBuilder topic = new StringBuilder();
+		topic.append("<div class='l1'>").append(attach.getTopic()).append("</div>");
+		topic.append("<div class='l2 clearfix'>");
+		topic.append(" <div class='left'>");
+		topic.append($m("AbstractAttachmentExHandler.0")).append(" - ")
+				.append(FileUtils.toFileSize(attach.getAttachsize())).append("<br>");
+		topic.append($m("AbstractAttachmentExHandler.1")).append(" - ")
+				.append(StringUtils.blank(attach.getFileExt()).toUpperCase());
+		topic.append(" </div>");
+		topic.append(" <div class='right'>");
+		topic.append(Convert.toDateTimeString(attach.getCreateDate()));
+		topic.append(" </div>");
+		topic.append("</div>");
+		row.add("topic", topic.toString());
+
+		final StringBuilder ope = new StringBuilder();
+		ope.append(new ButtonElement($m("AbstractAttachmentExHandler.2")).setOnclick("$Actions['"
+				+ cp.getComponentName() + "_history_selected']('attachId=" + attach.getId() + "');"));
+		row.add(TablePagerColumn.OPE, ope.toString());
 		return row;
+	}
+
+	@Override
+	public void doAttachmentHistorySelected(final ComponentParameter cp) throws IOException {
+		final IAttachmentService<T> aService = getAttachmentService();
+		final Attachment attach = aService.getBean(cp.getParameter("attachId"));
+
+		@SuppressWarnings("unchecked")
+		final AttachmentFile af = aService.createAttachmentFile((T) attach).setId(null);
+		aService.insert(getOwnerId(cp), cp.getLoginId(), Arrays.asList(af));
 	}
 
 	@Override
