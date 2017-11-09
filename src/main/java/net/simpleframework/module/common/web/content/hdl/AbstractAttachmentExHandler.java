@@ -7,10 +7,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.simpleframework.ado.ColumnData;
+import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.bean.AbstractIdBean;
+import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.ImageUtils;
+import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.module.common.content.Attachment;
@@ -157,6 +161,25 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 	public String getTooltipPath(final ComponentParameter cp) {
 		return AbstractMVCPage.url(AttachmentTooltipPage.class,
 				AttachmentUtils.BEAN_ID + "=" + cp.hashId());
+	}
+
+	@Override
+	public IDataQuery<?> queryAttachmentHistory(final ComponentParameter cp) {
+		final ID loginId = cp.getLoginId();
+		if (loginId == null) {
+			return DataQueryUtils.nullQuery();
+		}
+		return getAttachmentService().queryByParams(FilterItems.of("userid", loginId),
+				ColumnData.DESC("createdate"));
+	}
+
+	@Override
+	public Map<String, Object> getAttachmentHistoryRowData(final ComponentParameter cp,
+			final Object dataObject) {
+		final Attachment attach = (Attachment) dataObject;
+		final KVMap row = new KVMap();
+		row.add("topic", attach.getTopic());
+		return row;
 	}
 
 	@Override
