@@ -208,6 +208,11 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	@Override
 	public void doAttachmentHistorySelected(final ComponentParameter cp) throws IOException {
+		final int attachmentsLimit = (Integer) cp.getBeanProperty("attachmentsLimit");
+		if (attachmentsLimit > 0 && (attachments(cp).size() + 1) > attachmentsLimit) {
+			throwAttachmentsLimit(attachmentsLimit);
+		}
+
 		final IAttachmentService<T> aService = getAttachmentService();
 		final Attachment attach = aService.getBean(cp.getParameter("attachId"));
 
