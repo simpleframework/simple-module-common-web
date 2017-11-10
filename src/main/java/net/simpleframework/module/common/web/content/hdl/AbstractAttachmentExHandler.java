@@ -26,10 +26,14 @@ import net.simpleframework.module.common.web.content.page.AbstractAttachmentTool
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.PageRequestResponse;
+import net.simpleframework.mvc.common.DownloadUtils;
+import net.simpleframework.mvc.common.IDownloadHandler;
 import net.simpleframework.mvc.common.ImageCache;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ImageElement;
+import net.simpleframework.mvc.common.element.JS;
+import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.attachments.AbstractAttachmentHandler;
 import net.simpleframework.mvc.component.ext.attachments.AttachmentUtils;
@@ -179,13 +183,23 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		return getAttachmentService().queryByUser(cp.getLoginId(), true, arr);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> getAttachmentHistoryRowData(final ComponentParameter cp,
 			final Object dataObject) {
-		final Attachment attach = (Attachment) dataObject;
+		final T attach = (T) dataObject;
+		Object tele;
+		try {
+			final AttachmentFile af = getAttachmentService().createAttachmentFile(attach);
+			final String dloc = DownloadUtils.getDownloadHref(af,
+					(Class<? extends IDownloadHandler>) cp.getComponentHandler().getClass());
+			tele = new LinkElement(attach.getTopic()).setOnclick(JS.loc(dloc, true));
+		} catch (final IOException e) {
+			tele = attach.getTopic();
+		}
 		final KVMap row = new KVMap();
 		final StringBuilder topic = new StringBuilder();
-		topic.append("<div class='l1'>").append(attach.getTopic()).append("</div>");
+		topic.append("<div class='l1'>").append(tele).append("</div>");
 		topic.append("<div class='l2 clearfix'>");
 		topic.append(" <div class='left'>");
 		topic.append($m("AbstractAttachmentExHandler.0")).append(" - ")
