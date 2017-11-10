@@ -212,7 +212,8 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		final Attachment attach = aService.getBean(cp.getParameter("attachId"));
 
 		@SuppressWarnings("unchecked")
-		final AttachmentFile af = aService.createAttachmentFile((T) attach).setId(null);
+		final AttachmentFile af = aService.createAttachmentFile((T) attach).setId(null)
+				.setCreateDate(null);
 		aService.insert(getOwnerId(cp), cp.getLoginId(), Arrays.asList(af));
 	}
 
