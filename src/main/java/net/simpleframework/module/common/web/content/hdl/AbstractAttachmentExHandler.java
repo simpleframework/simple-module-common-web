@@ -233,7 +233,13 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		@SuppressWarnings("unchecked")
 		final AttachmentFile af = aService.createAttachmentFile((T) attach).setId(null)
 				.setCreateDate(null).setType(getAttachtype(cp)).setDownloads(0);
-		aService.insert(getOwnerId(cp), cp.getLoginId(), Arrays.asList(af));
+
+		final ID contentId = getOwnerId(cp);
+		if (contentId == null) {
+			getUploadCache(cp).put(af.getId(), af);
+		} else {
+			aService.insert(contentId, cp.getLoginId(), Arrays.asList(af));
+		}
 	}
 
 	@Override
