@@ -34,6 +34,7 @@ import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkElement;
+import net.simpleframework.mvc.component.ComponentException;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.attachments.AbstractAttachmentHandler;
 import net.simpleframework.mvc.component.ext.attachments.AttachmentUtils;
@@ -222,23 +223,30 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	@Override
 	public void doAttachmentHistorySelected(final ComponentParameter cp) throws IOException {
+		final String idstr = cp.getParameter("attachId");
+		if (!StringUtils.hasText(idstr)) {
+			throw ComponentException.of("未选择内容条目");
+		}
+
 		final int attachmentsLimit = (Integer) cp.getBeanProperty("attachmentsLimit");
 		if (attachmentsLimit > 0 && (attachments(cp).size() + 1) > attachmentsLimit) {
 			throwAttachmentsLimit(attachmentsLimit);
 		}
 
 		final IAttachmentService<T> aService = getAttachmentService();
-		final Attachment attach = aService.getBean(cp.getParameter("attachId"));
+		for (final String id : StringUtils.split(idstr, ";")) {
+			final Attachment attach = aService.getBean(id);
 
-		@SuppressWarnings("unchecked")
-		final AttachmentFile af = aService.createAttachmentFile((T) attach).setId(null)
-				.setCreateDate(null).setType(getAttachtype(cp)).setDownloads(0);
+			@SuppressWarnings("unchecked")
+			final AttachmentFile af = aService.createAttachmentFile((T) attach).setId(null)
+					.setCreateDate(null).setType(getAttachtype(cp)).setDownloads(0);
 
-		final ID contentId = getOwnerId(cp);
-		if (contentId == null) {
-			getUploadCache(cp).put(af.getId(), af);
-		} else {
-			aService.insert(contentId, cp.getLoginId(), Arrays.asList(af));
+			final ID contentId = getOwnerId(cp);
+			if (contentId == null) {
+				getUploadCache(cp).put(af.getId(), af);
+			} else {
+				aService.insert(contentId, cp.getLoginId(), Arrays.asList(af));
+			}
 		}
 	}
 
