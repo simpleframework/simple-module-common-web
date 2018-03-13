@@ -3,6 +3,8 @@ package net.simpleframework.module.common.web.content;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.simpleframework.ado.bean.IIdBeanAware;
 import net.simpleframework.common.Convert;
@@ -32,7 +34,8 @@ import net.simpleframework.mvc.component.ext.ckeditor.Toolbar;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class ContentUtils {
@@ -188,4 +191,14 @@ public abstract class ContentUtils {
 			new String[] { "TextColor", "BGColor" },
 			new String[] { "Image", "Table", "HorizontalRule", "Smiley", "SpecialChar" },
 			new String[] { "Attach" }, new String[] { "Maximize" });
+
+	public static final Map<String, String> VIDEO_TYPEs = new HashMap<>();
+	static {
+		VIDEO_TYPEs.put("mp3", "audio/mp3");
+		VIDEO_TYPEs.put("mp4", "video/mp4");
+		VIDEO_TYPEs.put("webm", "video/webm");
+		VIDEO_TYPEs.put("ogv", "video/ogg");
+		VIDEO_TYPEs.put("flv", "video/flv");
+		VIDEO_TYPEs.put("m3u8", "application/x-mpegURL");
+	}
 }

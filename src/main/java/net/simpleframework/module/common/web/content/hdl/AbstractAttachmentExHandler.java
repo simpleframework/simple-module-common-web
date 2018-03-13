@@ -16,12 +16,14 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.FileUtils;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.ImageUtils;
+import net.simpleframework.common.MimeTypes;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
+import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.common.web.content.page.AbstractAttachmentTooltipPage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
@@ -34,6 +36,7 @@ import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkElement;
+import net.simpleframework.mvc.common.element.TagElement;
 import net.simpleframework.mvc.component.ComponentException;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.attachments.AbstractAttachmentHandler;
@@ -256,12 +259,22 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		return null;
 	}
 
-	protected ImageElement createImageViewer(final PageParameter pp,
+	protected AbstractElement<?> createImageViewer(final PageParameter pp,
 			final AttachmentFile attachmentFile, final String id) {
 		try {
-			if (ImageUtils.isImage(attachmentFile.getExt())) {
+			final String ext = attachmentFile.getExt();
+			if (ImageUtils.isImage(ext)) {
 				return new ImageElement().addAttribute("viewer_id", id)
 						.setSrc(new ImageCache().getPath(pp, attachmentFile));
+			}
+			// 视频
+			final String mimeType = MimeTypes.getMimeType(ext);
+			if (mimeType.startsWith("video/")) {
+				return new TagElement("video").addAttribute("width", "100%")
+						.addAttribute("controls", "")
+						.addElements(new TagElement("source")
+								.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(ext))
+								.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
 			}
 		} catch (final IOException e) {
 			getLog().warn(e);
