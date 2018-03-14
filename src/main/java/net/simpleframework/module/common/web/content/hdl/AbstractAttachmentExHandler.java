@@ -259,6 +259,14 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		return null;
 	}
 
+	protected AbstractElement<?> createVideoElement(final PageParameter pp,
+			final AttachmentFile attachmentFile) throws IOException {
+		return new TagElement("video").addAttribute("width", "100%").addAttribute("controls", "")
+				.addElements(new TagElement("source")
+						.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(attachmentFile.getExt()))
+						.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
+	}
+
 	protected AbstractElement<?> createImageViewer(final PageParameter pp,
 			final AttachmentFile attachmentFile, final String id) {
 		try {
@@ -270,11 +278,7 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			// 视频
 			final String mimeType = MimeTypes.getMimeType(ext);
 			if (mimeType.startsWith("video/")) {
-				return new TagElement("video").addAttribute("width", "100%")
-						.addAttribute("controls", "")
-						.addElements(new TagElement("source")
-								.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(ext))
-								.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
+				return createVideoElement(pp, attachmentFile);
 			}
 		} catch (final IOException e) {
 			getLog().warn(e);
