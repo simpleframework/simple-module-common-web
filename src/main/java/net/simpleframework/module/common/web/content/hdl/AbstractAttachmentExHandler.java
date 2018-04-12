@@ -259,9 +259,19 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 		return null;
 	}
 
+	protected AbstractElement<?> createAudioElement(final PageParameter pp,
+			final AttachmentFile attachmentFile) throws IOException {
+		return new TagElement("audio").addAttribute("width", "100%")
+				.addAttribute("controls", "controls").addAttribute("preload", "preload")
+				.addElements(new TagElement("source")
+						.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(attachmentFile.getExt()))
+						.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
+	}
+
 	protected AbstractElement<?> createVideoElement(final PageParameter pp,
 			final AttachmentFile attachmentFile) throws IOException {
-		return new TagElement("video").addAttribute("width", "100%").addAttribute("controls", "")
+		return new TagElement("video").addAttribute("width", "100%")
+				.addAttribute("controls", "controls").addAttribute("preload", "preload")
 				.addElements(new TagElement("source")
 						.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(attachmentFile.getExt()))
 						.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
@@ -279,6 +289,8 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			final String mimeType = MimeTypes.getMimeType(ext);
 			if (mimeType.startsWith("video/")) {
 				return createVideoElement(pp, attachmentFile);
+			} else if (mimeType.startsWith("audio/")) {
+				return createAudioElement(pp, attachmentFile);
 			}
 		} catch (final IOException e) {
 			getLog().warn(e);

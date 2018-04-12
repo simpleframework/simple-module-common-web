@@ -195,6 +195,7 @@ public abstract class ContentUtils {
 	public static final Map<String, String> VIDEO_TYPEs = new HashMap<>();
 	static {
 		VIDEO_TYPEs.put("mp3", "audio/mp3");
+		VIDEO_TYPEs.put("m4a", "audio/m4a");
 		VIDEO_TYPEs.put("mp4", "video/mp4");
 		VIDEO_TYPEs.put("webm", "video/webm");
 		VIDEO_TYPEs.put("ogv", "video/ogg");
