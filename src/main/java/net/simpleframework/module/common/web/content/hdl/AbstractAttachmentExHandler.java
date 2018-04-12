@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.simpleframework.ado.bean.AbstractIdBean;
+import net.simpleframework.ado.db.IDbEntityManager;
+import net.simpleframework.ado.db.cache.IDbEntityCache;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.FileUtils;
@@ -248,6 +250,13 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			if (contentId == null) {
 				getUploadCache(cp).put(af.getId(), af);
 			} else {
+				// 清除缓存
+				@SuppressWarnings("unchecked")
+				final IDbEntityManager<Attachment> aMgr = (IDbEntityManager<Attachment>) aService
+						.getEntityManager();
+				if (aMgr instanceof IDbEntityCache) {
+					((IDbEntityCache) aMgr).removeVal(attach);
+				}
 				aService.insert(contentId, cp.getLoginId(), Arrays.asList(af));
 			}
 		}
