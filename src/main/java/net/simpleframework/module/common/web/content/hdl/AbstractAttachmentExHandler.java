@@ -233,13 +233,14 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			throw ComponentException.of("未选择内容条目");
 		}
 
+		final String[] ids = StringUtils.split(idstr, ";");
 		final int attachmentsLimit = (Integer) cp.getBeanProperty("attachmentsLimit");
-		if (attachmentsLimit > 0 && (attachments(cp).size() + 1) > attachmentsLimit) {
+		if (attachmentsLimit > 0 && (attachments(cp).size() + ids.length) > attachmentsLimit) {
 			throwAttachmentsLimit(attachmentsLimit);
 		}
 
 		final IAttachmentService<T> aService = getAttachmentService();
-		for (final String id : StringUtils.split(idstr, ";")) {
+		for (final String id : ids) {
 			final Attachment attach = aService.getBean(id);
 
 			@SuppressWarnings("unchecked")
