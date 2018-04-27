@@ -184,7 +184,9 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 			cp.addFormParameter("types", types);
 			arr = StringUtils.split(types, ";");
 		}
-		return getAttachmentService().queryByUser(cp.getLoginId(), true, arr);
+		final IAttachmentService<T> attachService = getAttachmentService();
+		attachService.setQueryNoCache();
+		return attachService.queryByUser(cp.getLoginId(), true, arr);
 	}
 
 	@SuppressWarnings("unchecked")
