@@ -265,8 +265,8 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	protected AbstractElement<?> createAudioElement(final PageParameter pp,
 			final AttachmentFile attachmentFile) throws IOException {
-		return new TagElement("audio").addAttribute("width", "100%")
-				.addAttribute("controls", "controls").addAttribute("preload", "preload")
+		return new TagElement("audio").addAttribute("width", "100%").addAttribute("controls")
+				.addAttribute("preload")
 				.addElements(new TagElement("source")
 						.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(attachmentFile.getExt()))
 						.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
@@ -275,7 +275,8 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 	protected AbstractElement<?> createVideoElement(final PageParameter pp,
 			final AttachmentFile attachmentFile) throws IOException {
 		return new TagElement("video").addAttribute("width", "100%")
-				.addAttribute("controls", "controls").addAttribute("preload", "preload")
+				.addAttribute("webkit-playsinline").addAttribute("playsinline")
+				.addAttribute("x5-playsinline").addAttribute("controls").addAttribute("preload")
 				.addElements(new TagElement("source")
 						.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(attachmentFile.getExt()))
 						.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
