@@ -32,6 +32,7 @@ import net.simpleframework.mvc.common.DownloadUtils;
 import net.simpleframework.mvc.common.IDownloadHandler;
 import net.simpleframework.mvc.common.ImageCache;
 import net.simpleframework.mvc.common.element.AbstractElement;
+import net.simpleframework.mvc.common.element.BlockElement;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.JS;
@@ -265,10 +266,9 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	protected AbstractElement<?> createAudioElement(final PageParameter pp,
 			final AttachmentFile attachmentFile) throws IOException {
-		return new TagElement("audio").addAttribute("width", "100%").addAttribute("controls")
-				.addAttribute("preload")
-				.addElements(new TagElement("source")
-						.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(attachmentFile.getExt()))
+		return new BlockElement().addClassName("ckeditor-html5-audio").addStyle("text-align: center;")
+				.addElements(new TagElement("audio").addAttribute("width", "100%")
+						.addAttribute("controls").addAttribute("preload")
 						.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
 	}
 
