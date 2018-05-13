@@ -23,7 +23,6 @@ import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
-import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.common.web.content.page.AbstractAttachmentTooltipPage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
@@ -274,11 +273,10 @@ public abstract class AbstractAttachmentExHandler<T extends Attachment, M extend
 
 	protected AbstractElement<?> createVideoElement(final PageParameter pp,
 			final AttachmentFile attachmentFile) throws IOException {
-		return new TagElement("video").addAttribute("width", "100%")
-				.addAttribute("webkit-playsinline").addAttribute("playsinline")
-				.addAttribute("x5-playsinline").addAttribute("controls").addAttribute("preload")
-				.addElements(new TagElement("source")
-						.addAttribute("type", ContentUtils.VIDEO_TYPEs.get(attachmentFile.getExt()))
+		return new BlockElement().addClassName("ckeditor-html5-video").addStyle("text-align: center;")
+				.addElements(new TagElement("video").addAttribute("width", "100%")
+						.addAttribute("webkit-playsinline").addAttribute("playsinline")
+						.addAttribute("x5-playsinline").addAttribute("controls").addAttribute("preload")
 						.addAttribute("src", new ImageCache().getPath(pp, attachmentFile)));
 	}
 
